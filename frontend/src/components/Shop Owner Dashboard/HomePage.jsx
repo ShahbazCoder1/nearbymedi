@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ShopSearch from "./ShopSearch";
-import Dashboard from "./Dashboard";
+import Dashboard from "./S-Dashboard";
 import AddMedicineModal from "./AddMedicineModal";
 import "../../Styles/ShopOwner.css"; // Import CSS file for styling
 
