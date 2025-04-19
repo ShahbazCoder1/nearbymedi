@@ -75,5 +75,3 @@ def get_nearby_locations_with_ratings(lat, lon, radius_km=5):
             continue
     return nearby
 
-print(get_nearby_locations_with_ratings(26.7553826927443, 89.07331837646706, radius_km=10))
-
