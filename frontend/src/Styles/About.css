@@ -1,0 +1,402 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.about-section {
+  padding: 5rem 0;
+  background-color: #fff;
+  position: relative;
+}
+
+.about-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(16, 165, 84, 0.2),
+    transparent
+  );
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.section-subheading {
+  font-size: 1.25rem;
+  color: #555;
+  max-width: 700px;
+  margin: 1rem auto 0;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.highlight {
+  color: #10a554;
+  position: relative;
+  display: inline-block;
+  font-family: "poppins", sans-serif;
+}
+
+.divider {
+  height: 3px;
+  width: 80px;
+  background-color: #10a554;
+  margin: 0 auto;
+}
+
+.about-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.about-image {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.about-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  transition: transform 0.5s ease;
+}
+
+.about-image:hover img {
+  transform: scale(1.03);
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  padding: 2rem 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.about-image:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-text {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.about-content {
+  padding: 2rem;
+}
+
+.about-content h3 {
+  color: #10a554;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.about-content h3:after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #10a554;
+}
+
+.intro-text {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.about-description p {
+  color: #555;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  background-color: #f9f9f9;
+  padding: 1.2rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  background-color: #f0faf5;
+  transform: translateY(-3px);
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(16, 165, 84, 0.1);
+  border-radius: 8px;
+  margin-right: 1rem;
+  color: #10a554;
+  flex-shrink: 0;
+}
+
+.feature-text {
+  flex: 1;
+}
+
+.feature-text h4 {
+  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.feature-text p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+
+.steps-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.step:hover {
+  background-color: #f0faf5;
+  transform: translateY(-2px);
+}
+
+.step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(16, 165, 84, 0.1);
+  border-radius: 50%;
+  margin-right: 1rem;
+  color: #10a554;
+  flex-shrink: 0;
+}
+
+.step h4 {
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+}
+
+.step p {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.about-tagline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0faf5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  transition: all 0.3s ease;
+}
+
+.about-tagline:hover {
+  box-shadow: 0 5px 15px rgba(16, 165, 84, 0.1);
+}
+
+.tagline-icon {
+  color: #10a554;
+  margin-right: 12px;
+}
+
+.about-tagline p {
+  color: #10a554;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.about-cta {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.cta-button {
+  background-color: #10a554;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.9rem 1.8rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #0c8544;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 165, 84, 0.2);
+}
+
+.arrow-icon {
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.cta-button:hover .arrow-icon {
+  transform: translateX(4px);
+}
+
+@media (min-width: 768px) {
+  .about-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .about-image img {
+    height: 100%;
+    border-radius: 12px 0 0 12px;
+  }
+
+  .steps-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .about-section {
+    padding: 6rem 0;
+  }
+
+  .about-content {
+    padding: 2.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-section {
+    padding: 2rem 0;
+    background-color: #fff;
+    position: relative;
+  }
+
+  .section-header h2 {
+    font-size: 2.2rem;
+  }
+
+  .section-subheading {
+    font-size: 1.1rem;
+  }
+
+  .about-content h3 {
+    font-size: 1.6rem;
+  }
+
+  .about-description p {
+    font-size: 1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step {
+    padding: 0.8rem;
+  }
+
+  .cta-button {
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-item {
+    padding: 1rem;
+  }
+
+  .feature-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .about-content {
+    padding: 1.5rem;
+  }
+
+  .step-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .step h4 {
+    font-size: 1rem;
+  }
+
+  .step p {
+    font-size: 0.9rem;
+  }
+}
