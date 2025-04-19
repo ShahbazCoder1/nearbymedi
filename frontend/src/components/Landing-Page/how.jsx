@@ -1,10 +1,10 @@
-
 import React, { useEffect } from 'react';
 import '../../Styles/How.css';
 import { Search, MapPin, Navigation } from 'lucide-react';
 
 const How = () => {
   useEffect(() => {
+    // Add intersection observer for animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -13,6 +13,7 @@ const How = () => {
       });
     }, { threshold: 0.1 });
 
+    // Observe all elements with animation classes
     const animatedElements = document.querySelectorAll('.animate-pop');
     animatedElements.forEach(el => observer.observe(el));
     
@@ -37,6 +38,7 @@ const How = () => {
         <div className="how-visual-container">
           <div className="step-item animate-pop">
             <div className="gif-container">
+              {/* Replace with your actual search GIF */}
               <img 
                 src="/images/search-medicine.gif" 
                 alt="Searching for medicine" 
@@ -53,6 +55,7 @@ const How = () => {
           
           <div className="step-item animate-pop">
             <div className="gif-container">
+              {/* Replace with your actual pharmacy GIF */}
               <img 
                 src="/images/nearby-pharmacies.gif" 
                 alt="Finding nearby pharmacies" 
@@ -69,6 +72,7 @@ const How = () => {
           
           <div className="step-item animate-pop">
             <div className="gif-container">
+              {/* Replace with your actual directions GIF */}
               <img 
                 src="/images/get-directions.gif" 
                 alt="Getting directions to pharmacy" 

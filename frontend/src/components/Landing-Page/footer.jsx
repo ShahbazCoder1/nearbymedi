@@ -1,5 +1,5 @@
 import React from "react";
-import "../../Styles/footer.css";
+import "../../Styles/Footer.css";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 const Footer = () => {

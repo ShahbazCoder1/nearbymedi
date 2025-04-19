@@ -27,12 +27,23 @@
 
 .search-container {
   background: linear-gradient(180deg, rgba(16, 165, 84, 0.08) 0%, rgba(247, 247, 247, 0) 100%);
-  padding: 20px 0;
+  padding: 0;
+  min-height: calc(95vh - 80px);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-container-inner {
-  padding: 40px 8%;
+  padding: 40px 5%;
   border-radius: 16px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .header-text {
@@ -188,6 +199,7 @@
   border-color: rgba(16, 165, 84, 0.3);
 }
 
+/* Different color variations for pills */
 .filter-pill:nth-child(1) {
   color: #2563eb;
 }
@@ -315,6 +327,7 @@
   background-color: var(--primary-bg);
 }
 
+/* Searchbar Animations */
 .animated-placeholder-input {
   position: absolute;
   left: 48px;
@@ -355,13 +368,15 @@
   }
 }
 
+/* Responsive styling */
 @media (max-width: 768px) {
   .search-container-inner {
-    padding: 0px 5%;
+    padding: 20px 5%;
   }
   .search-container {
     background: linear-gradient(180deg, rgba(16, 165, 84, 0.08) 0%, rgba(247, 247, 247, 0) 100%);
-    padding: 5px 0;
+    padding: 20px 0;
+    min-height: 100vh;
   }
   
   .header-text {
@@ -401,7 +416,7 @@
 
 @media (max-width: 400px) {
   .search-container-inner {
-    padding: 0px 4%;
+    padding: 15px 4%;
   }
   
   .search-button {

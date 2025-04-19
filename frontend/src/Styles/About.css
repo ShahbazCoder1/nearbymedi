@@ -149,6 +149,7 @@
   margin-bottom: 1.5rem;
 }
 
+/* Features grid styles */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -201,7 +202,7 @@
   line-height: 1.5;
 }
 
-
+/* Steps styling */
 .steps-container {
   display: grid;
   grid-template-columns: 1fr;
@@ -310,6 +311,7 @@
   transform: translateX(4px);
 }
 
+/* Media queries for responsiveness */
 @media (min-width: 768px) {
   .about-card {
     grid-template-columns: 1fr 1fr;

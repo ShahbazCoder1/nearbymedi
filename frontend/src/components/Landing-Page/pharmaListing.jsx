@@ -4,6 +4,7 @@ import { Users, ChevronRight, Activity, Users2, BarChart3 } from 'lucide-react';
 
 const PharmacyListing = () => {
   useEffect(() => {
+    // Add intersection observer for animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -12,6 +13,7 @@ const PharmacyListing = () => {
       });
     }, { threshold: 0.1 });
 
+    // Observe all elements with reveal class
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => observer.observe(el));
     
