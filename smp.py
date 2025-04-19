@@ -56,7 +56,7 @@ def extract_pharmacy_data(pharmacy):
     }
 
 def scan_medical_places():
-    csv_file_path = 'found_medical_places2.csv'
+    csv_file_path = 'found_medical_places.csv'
     file_exists = os.path.isfile(csv_file_path)
     fieldnames = ["id", "name", "address", "latitude", "longitude", "distance", "selected"]
     
