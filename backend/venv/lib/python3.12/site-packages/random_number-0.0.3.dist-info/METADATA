@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: random-number
+Version: 0.0.3
+Summary: A small example package that generates random numbers
+Home-page: https://github.com/ftozkoparan/random_number
+Author: ftozkoparan
+Author-email: furkantozkoparan@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
+# random_number
+python random number generator package
+
+
