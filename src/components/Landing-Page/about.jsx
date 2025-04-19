@@ -1,4 +1,3 @@
-
 import React from 'react';
 import '../../Styles/About.css';
 import { MapPin } from 'lucide-react';
