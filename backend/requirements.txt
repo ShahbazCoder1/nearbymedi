@@ -9,7 +9,6 @@ backoff==2.2.1
 bcrypt==3.2.2
 beautifulsoup4==4.12.3
 blinker==1.9.0
-Brlapi==0.8.5
 CacheControl==0.14.2
 cachetools==5.5.2
 certifi==2025.1.31
