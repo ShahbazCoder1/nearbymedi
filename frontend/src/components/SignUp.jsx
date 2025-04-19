@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import "../Styles/SignUp.css"; // Import CSS file for styling
+import "../Styles/SignUp.css"; 
 import FormInput from "./FormInput";
 import SuccessMessage from "./SuccessMessage";
-import { validateSignUpForm } from "../Utils/validation"; // Import validation function
+import { validateSignUpForm } from "../Utils/validation";
 import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "../supabaseClient"; // Import supabase client
 
 const SignUp = () => {
   // State for form fields
@@ -21,6 +22,8 @@ const SignUp = () => {
   // State for form submission
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  // State for server errors
+  const [serverError, setServerError] = useState("");
 
   // Handle input changes
   const handleChange = (e) => {
@@ -40,8 +43,9 @@ const SignUp = () => {
   };
 
   // Form submission handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setServerError("");
 
     // Validate all fields before submission
     const newErrors = validateSignUpForm(formData);
@@ -50,13 +54,53 @@ const SignUp = () => {
     if (Object.keys(newErrors).length === 0) {
       setIsSubmitting(true);
 
-      // Simulate API call/backend integration
-      setTimeout(() => {
+      try {
+        // Register the user with Supabase
+        const { data, error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            data: {
+              full_name: formData.fullName,
+              mobile_number: formData.mobileNumber,
+            }
+          }
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        // If signup is successful, you might want to save additional user data
+        // to your profiles table in Supabase if needed
+        if (data.user) {
+          // Optional: Insert additional user data into a custom profiles table
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert([
+              { 
+                user_id: data.user.id, 
+                full_name: formData.fullName,
+                mobile_number: formData.mobileNumber,
+                email: formData.email
+              }
+            ]);
+
+          if (profileError) {
+            console.error("Error saving profile data:", profileError);
+            // Continue anyway since the user was created
+          }
+        }
+
         setIsSubmitting(false);
         setIsSubmitted(true);
-        // In a real app, you would send the form data to your backend here
-        console.log("Form submitted successfully:", formData);
-      }, 1500);
+        console.log("User registered successfully:", data);
+        
+      } catch (error) {
+        console.error("Registration error:", error);
+        setServerError(error.message || "Failed to create account. Please try again.");
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -89,6 +133,12 @@ const SignUp = () => {
           <h1 className="signup-title">Create your account</h1>
           <p className="signup-subtitle">Fill in the details to get started</p>
         </div>
+
+        {serverError && (
+          <div className="error-message server-error">
+            {serverError}
+          </div>
+        )}
 
         <form className="signup-form" onSubmit={handleSubmit}>
           <FormInput

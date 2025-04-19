@@ -1,0 +1,170 @@
+/* Keep your existing CSS variables */
+:root {
+    --brand-green: #10a554;
+    --medical-blue: #1E88E5;
+    --neutral-dark: #2E3B4E;
+    --light-mint: #E8F5E9;
+    --soft-teal: #B2DFDB;
+    --light-gray: #F5F7FA;
+    --availability-green: #43A047;
+    --warning-orange: #F57C00;
+    --alert-red: #E53935;
+}
+
+.dashboard {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+/* Updated to make a more flexible layout */
+.content-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    max-width: 1350px;
+    margin: 0 auto 40px;
+}
+
+/* New top section for medicine details and map */
+.top-section {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 24px;
+    height: 85vh;
+}
+
+.medicine-panel {
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    background-color: white;
+    overflow: auto;
+}
+
+.map-container {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Updated bottom section for pharmacy list */
+.bottom-section {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    background-color: white;
+    height: calc(100vh - 650px);
+    /* Adjust based on the height of your top section */
+    min-height: 400px;
+    overflow: hidden;
+}
+
+/* Keep the rest of your CSS from the original file */
+.medicine-detail-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-left: 4px solid var(--brand-green);
+}
+
+.medicine-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.medicine-detail-header h3 {
+    font-size: 18px;
+    color: var(--neutral-dark);
+    margin: 0;
+}
+
+.medicine-detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.medicine-info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.medicine-info-item .icon {
+    color: var(--brand-green);
+}
+
+.medicine-tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid var(--light-gray);
+    margin-bottom: 12px;
+}
+
+.medicine-tab {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: var(--neutral-dark);
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.medicine-tab.active {
+    color: var(--brand-green);
+    border-bottom: 2px solid var(--brand-green);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+    .top-section {
+        grid-template-columns: 1fr 1fr;
+        height: 500px;
+    }
+}
+
+@media (max-width: 992px) {
+    .top-section {
+        grid-template-columns: 1fr;
+        height: 1000px;
+    }
+
+    .medicine-panel,
+    .map-container {
+        height: 500px;
+    }
+
+    .bottom-section {
+        height: 500px;
+    }
+}
+
+@media (max-width: 576px) {
+    .content-container {
+        padding: 12px;
+    }
+
+    .top-section {
+        gap: 24px;
+    }
+
+    .medicine-panel,
+    .map-container {
+        height: 500px;
+    }
+
+    .bottom-section {
+        height: 400px;
+    }
+}
