@@ -1,26 +1,84 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Search, Pill } from "lucide-react";
 import "../Styles/SearchBar.css";
-
-const medicines = [
-  "Durex Extra Thin", "Manforce Long Time", "Spa Services", "Paracetamol",
-  "Aspirin", "Ibuprofen", "Amoxicillin", "Omeprazole", "Metformin",
-  "Lisinopril", "Amlodipine", "Metoprolol", "Simvastatin"
-];
+import { supabase } from "../supabaseClient";
 
 const placeholderTexts = ["Shampoo", "Medicines", "Healthcare", "Lab tests"];
 
-const SearchInp= ({ isDashboard }) => {
+const SearchInp = ({ isDashboard }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
+  const [filteredMedicines, setFilteredMedicines] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const searchWrapperRef = useRef(null);
+  const searchTimeoutRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const filteredMedicines = medicines.filter((medicine) =>
-    medicine.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Function to fetch medicine suggestions from Supabase
+  const fetchMedicineSuggestions = async (term) => {
+    if (!term || term.length < 2) {
+      setFilteredMedicines([]);
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      try {
+        const { data, error } = await supabase
+          .from('medicine')
+          .select('name')
+          .textSearch('name', term, {
+            config: 'english',
+            type: 'websearch'
+          })
+          .limit(15);
+        
+        if (!error && data && data.length > 0) {
+          setFilteredMedicines(data.map(item => item.name));
+          setIsLoading(false);
+          return;
+        }
+      } catch (textSearchError) {
+        console.log('Text search not available or failed:', textSearchError);
+      }
+      
+      // Fallback to ILIKE search
+      const { data: ilikeData, error: ilikeError } = await supabase
+        .from('medicine')
+        .select('name')
+        .or(
+          `name.ilike.%${term}%,` +
+          `name.ilike.${term}%,` + 
+          `name.ilike.% ${term}%`
+        )
+        .order('name')
+        .limit(15);
+        
+      if (!ilikeError && ilikeData) {
+        setFilteredMedicines(ilikeData.map(item => item.name));
+      } else {
+        console.error('Error with ILIKE search:', ilikeError);
+        setFilteredMedicines([]);
+      }
+    } catch (err) {
+      console.error('Error in API call:', err);
+      setFilteredMedicines([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Get initial search term from location state (when redirected from landing page)
+  useEffect(() => {
+    if (location.state?.searchQuery) {
+      setSearchTerm(location.state.searchQuery);
+      // Trigger search with the query from the landing page
+      fetchMedicineSuggestions(location.state.searchQuery);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,12 +101,34 @@ const SearchInp= ({ isDashboard }) => {
     };
   }, []);
 
+  // Effect to handle search term changes with debouncing
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    if (searchTerm.trim().length >= 2) {
+      searchTimeoutRef.current = setTimeout(() => {
+        fetchMedicineSuggestions(searchTerm.trim());
+      }, 400);
+    } else {
+      setFilteredMedicines([]);
+    }
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchTerm]);
+
   const handleSearchClick = () => {
     if (searchTerm.trim()) {
       console.log("Searching for:", searchTerm);
-      if (!isDashboard) {
-        navigate('/dashboard', { state: { searchQuery: searchTerm } });
-      }
+      // Update URL to reflect search but stay on dashboard
+      navigate(`/dashboard`, { state: { searchQuery: searchTerm }, replace: true });
+      
+      // Perform the search (this will be handled by the useEffect that watches location.state)
     } else {
       setShowSuggestions(true);
     }
@@ -87,21 +167,27 @@ const SearchInp= ({ isDashboard }) => {
         </button>
       </div>
 
-      {showSuggestions && filteredMedicines.length > 0 && (
+      {showSuggestions && (
         <div className="suggestions-dropdown">
-          {filteredMedicines.map((medicine, index) => (
-            <div
-              key={index}
-              className="suggestion-item"
-              onClick={() => {
-                setSearchTerm(medicine);
-                setShowSuggestions(false);
-              }}
-            >
-              <Pill size={14} style={{ marginRight: '10px', opacity: 0.6 }} />
-              {medicine}
-            </div>
-          ))}
+          {isLoading ? (
+            <div className="suggestion-item loading">Loading...</div>
+          ) : filteredMedicines.length > 0 ? (
+            filteredMedicines.map((medicine, index) => (
+              <div
+                key={index}
+                className="suggestion-item"
+                onClick={() => {
+                  setSearchTerm(medicine);
+                  setShowSuggestions(false);
+                }}
+              >
+                <Pill size={14} style={{ marginRight: '10px', opacity: 0.6 }} />
+                {medicine}
+              </div>
+            ))
+          ) : searchTerm.length > 1 ? (
+            <div className="suggestion-item no-results">No medicines found</div>
+          ) : null}
         </div>
       )}
     </div>

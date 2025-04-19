@@ -8,6 +8,8 @@ import Faq from "./components/Landing-Page/faq";
 import PharmacyListing from "./components/Landing-Page/pharmaListing";
 import Footer from "./components/Landing-Page/footer";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import LogIn from "./components/LogIn";
+import SignUp from "./components/SignUp";
 
 function App() {
   return (
@@ -15,6 +17,9 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/search/:query?" element={<Dashboard />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={
             <>
               <Header />

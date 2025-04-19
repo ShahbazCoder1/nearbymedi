@@ -4,7 +4,7 @@ import FormInput from "./FormInput";
 import SuccessMessage from "./SuccessMessage";
 import { validateSignUpForm } from "../Utils/validation";
 import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "../supabaseClient"; // Import supabase client
+import { supabase } from "../supabaseClient";
 
 const SignUp = () => {
   // State for form fields

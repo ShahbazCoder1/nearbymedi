@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../Styles/LogIn.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
 
 const LogIn = () => {
   // State for form fields
@@ -15,6 +16,9 @@ const LogIn = () => {
   // State for form submission
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [serverError, setServerError] = useState("");
+  
+  const navigate = useNavigate();
 
   // Handle input changes
   const handleChange = (e) => {
@@ -30,6 +34,11 @@ const LogIn = () => {
         ...errors,
         [name]: "",
       });
+    }
+    
+    // Clear server error when user types anything
+    if (serverError) {
+      setServerError("");
     }
   };
 
@@ -58,8 +67,9 @@ const LogIn = () => {
   };
 
   // Form submission handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setServerError("");
 
     // Validate all fields before submission
     const isValid = validateForm();
@@ -67,14 +77,37 @@ const LogIn = () => {
     if (isValid) {
       setIsSubmitting(true);
 
-      // Simulate API call/backend integration
-      setTimeout(() => {
+      try {
+        // Determine if identifier is an email or phone number
+        const isEmail = /\S+@\S+\.\S+/.test(formData.identifier);
+        
+        // Sign in with Supabase
+        const { data, error } = await supabase.auth.signInWithPassword({
+          // If identifier is an email, use it directly; otherwise use it as a phone number
+          email: isEmail ? formData.identifier : `${formData.identifier}@phone.user`, // Using a placeholder email for phone numbers
+          password: formData.password,
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        // If login successful, check if we need to fetch user profile
+        console.log("Login successful:", data);
+        
         setIsSubmitting(false);
         setIsSubmitted(true);
-        // In a real app, you would send the form data to your backend here
-        console.log("Login form submitted successfully:", formData);
-      }, 1500);
+      } catch (error) {
+        console.error("Login error:", error);
+        setServerError(error.message || "Invalid credentials. Please try again.");
+        setIsSubmitting(false);
+      }
     }
+  };
+
+  // Navigate to home page after successful login
+  const handleGoToHome = () => {
+    navigate('/');
   };
 
   // Show success message after submission
@@ -87,13 +120,7 @@ const LogIn = () => {
             <p>You have been logged in successfully.</p>
             <button
               className="login-button"
-              onClick={() => {
-                setIsSubmitted(false);
-                setFormData({
-                  identifier: "",
-                  password: "",
-                });
-              }}
+              onClick={handleGoToHome}
             >
               Go to Home
             </button>
@@ -110,6 +137,12 @@ const LogIn = () => {
           <h1 className="login-title">Login to your account</h1>
           <p className="login-subtitle">Enter your credentials to continue</p>
         </div>
+
+        {serverError && (
+          <div className="error-message server-error">
+            {serverError}
+          </div>
+        )}
 
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -165,7 +198,7 @@ const LogIn = () => {
         </form>
 
         <div className="signup-link">
-          Don't have an account? <Link to="/">Sign up</Link>
+          Don't have an account? <Link to="/signup">Sign up</Link>
         </div>
       </div>
     </div>

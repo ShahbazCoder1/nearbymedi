@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LocationSelector from "./Map/LocationSelector";
 import SearchInp from "./Search";
 import "../Styles/Header.css";
@@ -23,6 +23,7 @@ const Header = ({ isDashboard }) => {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Set to true when user is logged in
   const userDropdownRef = useRef(null);
+  const navigate = useNavigate();
   
   // Handle click outside user dropdown to close it
   useEffect(() => {
@@ -40,6 +41,15 @@ const Header = ({ isDashboard }) => {
   
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const toggleUserDropdown = () => setUserDropdownOpen((prev) => !prev);
+
+  // Navigation handlers
+  const handleSignIn = () => {
+    navigate("/login");
+  };
+  
+  const handleSignUp = () => {
+    navigate("/signup");
+  };
 
   return (
     <header className={`main-header ${isDashboard ? "dashboard-header" : ""}`}>
@@ -146,8 +156,8 @@ const Header = ({ isDashboard }) => {
             </div>
           ) : (
             <div className="auth-buttons">
-              <button className="sign-in-btn">Sign In</button>
-              <button className="sign-up-btn">Sign Up</button>
+              <button className="sign-in-btn" onClick={handleSignIn}>Sign In</button>
+              <button className="sign-up-btn" onClick={handleSignUp}>Sign Up</button>
             </div>
           )}
           
@@ -239,8 +249,8 @@ const Header = ({ isDashboard }) => {
           
           {!isLoggedIn && (
             <div className="mobile-auth-buttons">
-              <button className="sign-in-btn">Sign In</button>
-              <button className="sign-up-btn">Sign Up</button>
+              <button className="sign-in-btn" onClick={handleSignIn}>Sign In</button>
+              <button className="sign-up-btn" onClick={handleSignUp}>Sign Up</button>
             </div>
           )}
         </div>
