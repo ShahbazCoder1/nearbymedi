@@ -9,7 +9,7 @@ Finding medicines can be challenging because medicines are often available at on
 NearByMedi provides a system where users can search for medicines and find the nearest shop that has the medicine in stock. Additionally, it provides a map and directions to the shop for convenience.
 
 ## Workflow
-[Screenshot from 2025-04-20 00-25-52](https://github.com/user-attachments/assets/06791dd8-b6bc-4be0-a5fc-3774a3633a13)
+https://github.com/user-attachments/assets/06791dd8-b6bc-4be0-a5fc-3774a3633a13
 
 ## Tech Stack
 - **Frontend:** React
