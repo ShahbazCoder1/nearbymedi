@@ -12,7 +12,7 @@ const Faq = () => {
   const faqItems = [
     {
       question: "How does NearbyMedi work?",
-      answer: "NearbyMedi allows you to search for medicines and find nearby pharmacies that have them in stock. Simply enter the medicine name and your location (or use GPS), and we'll show you where it's available."
+      answer: "NearByMedi instantly shows you which nearby pharmacies have your medicine in stock and are open—just enter the medicine name and your location or use GPS."
     },
     {
       question: "Is the medicine availability information accurate?",
@@ -24,7 +24,7 @@ const Faq = () => {
     },
     {
       question: "Is NearbyMedi available in my city?",
-      answer: "NearbyMedi is expanding rapidly. We currently serve major metropolitan areas and are continuously adding new regions. Enter your location to see if service is available in your area."
+      answer: "NearByMedi is currently serving pharmacies and customers across West Bengal, bringing fast, reliable medicine availability right to your fingertips. We're excited to grow and expand to more regions soon—stay tuned."
     },
     {
       question: "Can I get medicine delivered to my home?",
@@ -32,7 +32,7 @@ const Faq = () => {
     },
     {
       question: "Is the service free to use?",
-      answer: "Yes, NearbyMedi is completely free for users searching for medicine availability information."
+      answer: "NearByMedi helps you find medicines at nearby pharmacies but does not handle deliveries. You can check the pharmacy's own website or contact them directly to see if delivery is available.."
     }
   ];
 

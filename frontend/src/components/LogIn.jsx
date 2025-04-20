@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Styles/LogIn.css";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
@@ -8,6 +8,7 @@ const LogIn = () => {
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
+    registrationType: "user"
   });
 
   // State for form validation
@@ -17,8 +18,47 @@ const LogIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [serverError, setServerError] = useState("");
-  
+
   const navigate = useNavigate();
+
+  // Check if profiles table exists on component mount
+  useEffect(() => {
+    const checkProfilesTable = async () => {
+      try {
+        // Try to get the schema information about the profiles table
+        const { error } = await supabase
+          .from('profiles')
+          .select('count')
+          .limit(1);
+
+        // If there's an error about the table not existing, create it
+        if (error && error.message.includes('does not exist')) {
+          console.log('Profiles table does not exist. Creating it...');
+          await createProfilesTable();
+        }
+      } catch (err) {
+        console.error("Error checking profiles table:", err);
+      }
+    };
+
+    checkProfilesTable();
+  }, []);
+
+  // Function to create the profiles table
+  const createProfilesTable = async () => {
+    try {
+      // Use SQL to create the profiles table via the REST API
+      const { error } = await supabase.rpc('create_profiles_table');
+      
+      if (error) {
+        console.error("Error creating profiles table:", error);
+      } else {
+        console.log("Profiles table created successfully");
+      }
+    } catch (err) {
+      console.error("Error executing create_profiles_table RPC:", err);
+    }
+  };
 
   // Handle input changes
   const handleChange = (e) => {
@@ -35,7 +75,7 @@ const LogIn = () => {
         [name]: "",
       });
     }
-    
+
     // Clear server error when user types anything
     if (serverError) {
       setServerError("");
@@ -71,32 +111,71 @@ const LogIn = () => {
     e.preventDefault();
     setServerError("");
 
-    // Validate all fields before submission
     const isValid = validateForm();
 
     if (isValid) {
       setIsSubmitting(true);
 
       try {
-        // Determine if identifier is an email or phone number
-        const isEmail = /\S+@\S+\.\S+/.test(formData.identifier);
-        
         // Sign in with Supabase
         const { data, error } = await supabase.auth.signInWithPassword({
-          // If identifier is an email, use it directly; otherwise use it as a phone number
-          email: isEmail ? formData.identifier : `${formData.identifier}@phone.user`, // Using a placeholder email for phone numbers
+          email: formData.identifier,
           password: formData.password,
         });
 
-        if (error) {
-          throw error;
+        if (error) throw error;
+
+        // Try to get user data from profiles table
+        let userType = formData.registrationType;
+        let userName = '';
+        
+        try {
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('user_type, full_name')
+            .eq('user_id', data.user.id)
+            .single();
+
+          if (!profileError && profileData) {
+            // If profile exists, verify user type
+            if (profileData.user_type !== formData.registrationType) {
+              throw new Error(`Invalid login. Please select correct ${profileData.user_type} login option.`);
+            }
+            // Set user data from profile
+            userType = profileData.user_type;
+            userName = profileData.full_name;
+          } else {
+            // If profile doesn't exist, create one based on the auth metadata
+            const userData = data.user.user_metadata || {};
+            userName = userData.full_name || data.user.email.split('@')[0];
+            
+            // Create a new profile entry
+            await supabase.from('profiles').insert([{
+              user_id: data.user.id,
+              email: data.user.email,
+              full_name: userName,
+              user_type: formData.registrationType
+            }]).single();
+          }
+        } catch (profileErr) {
+          // If error is not about table missing, rethrow it
+          if (!profileErr.message.includes('does not exist')) {
+            throw profileErr;
+          }
+          
+          // Otherwise, use auth metadata as fallback
+          const userData = data.user.user_metadata || {};
+          userName = userData.full_name || data.user.email.split('@')[0];
+          userType = formData.registrationType;
         }
 
-        // If login successful, check if we need to fetch user profile
-        console.log("Login successful:", data);
-        
         setIsSubmitting(false);
         setIsSubmitted(true);
+        
+        // Store user type and profile data in session storage
+        sessionStorage.setItem('userType', userType);
+        sessionStorage.setItem('userName', userName);
+        sessionStorage.setItem('userId', data.user.id);
       } catch (error) {
         console.error("Login error:", error);
         setServerError(error.message || "Invalid credentials. Please try again.");
@@ -105,9 +184,14 @@ const LogIn = () => {
     }
   };
 
-  // Navigate to home page after successful login
+  // Navigate to appropriate dashboard after successful login
   const handleGoToHome = () => {
-    navigate('/');
+    const userType = sessionStorage.getItem('userType');
+    if (userType === 'shop') {
+      navigate('/shop-dashboard');
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   // Show success message after submission
@@ -136,6 +220,15 @@ const LogIn = () => {
         <div className="login-header">
           <h1 className="login-title">Login to your account</h1>
           <p className="login-subtitle">Enter your credentials to continue</p>
+          <select
+            name="registrationType"
+            value={formData.registrationType}
+            onChange={handleChange}
+            className="registration-type-select"
+          >
+            <option value="user">User Login</option>
+            <option value="shop">Shop Owner Login</option>
+          </select>
         </div>
 
         {serverError && (
@@ -147,7 +240,7 @@ const LogIn = () => {
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label" htmlFor="identifier">
-              Email or Mobile Number
+              Email Address
             </label>
             <input
               type="text"

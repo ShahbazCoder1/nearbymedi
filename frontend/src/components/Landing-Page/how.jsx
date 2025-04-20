@@ -13,7 +13,7 @@ const How = () => {
       });
     }, { threshold: 0.1 });
 
-    // Observe all elements with animation classes
+    
     const animatedElements = document.querySelectorAll('.animate-pop');
     animatedElements.forEach(el => observer.observe(el));
     
@@ -40,7 +40,7 @@ const How = () => {
             <div className="gif-container">
               {/* Replace with your actual search GIF */}
               <img 
-                src="/images/search-medicine.gif" 
+                src="../../assets/GIF_20250420_125300_777.gif" 
                 alt="Searching for medicine" 
                 className="step-gif"
               />
@@ -49,7 +49,7 @@ const How = () => {
             <div className="step-content">
               <div className="step-number">1</div>
               <h3>Search for Medicines</h3>
-              <p>Enter the name of the medicine you need in our search bar.</p>
+              <p>To find the medicine you need, simply type its name—either brand or generic—into the search bar. As you type, suggestions will appear to help you quickly select the right option. Click on your medicine from the list to view detailed information or availability.</p>
             </div>
           </div>
           
@@ -57,7 +57,7 @@ const How = () => {
             <div className="gif-container">
               {/* Replace with your actual pharmacy GIF */}
               <img 
-                src="/images/nearby-pharmacies.gif" 
+                src="../../assets/GIF_20250420_125817_801.gif" 
                 alt="Finding nearby pharmacies" 
                 className="step-gif"
               />
@@ -66,7 +66,7 @@ const How = () => {
             <div className="step-content">
               <div className="step-number">2</div>
               <h3>See Nearby Pharmacies</h3>
-              <p>View pharmacies that have your medicines in stock.</p>
+              <p>Quickly find nearby pharmacies that have your medicines in stock by entering the medicine name and your location. This saves you time and helps you get what you need without hassle.</p>
             </div>
           </div>
           
@@ -74,7 +74,7 @@ const How = () => {
             <div className="gif-container">
               {/* Replace with your actual directions GIF */}
               <img 
-                src="/images/get-directions.gif" 
+                src="../../assets/GIF_20250420_125946_308.gif" 
                 alt="Getting directions to pharmacy" 
                 className="step-gif"
               />
@@ -83,7 +83,7 @@ const How = () => {
             <div className="step-content">
               <div className="step-number">3</div>
               <h3>Get Directions</h3>
-              <p>Navigate to your chosen pharmacy with turn-by-turn directions.</p>
+              <p>Get clear, turn-by-turn directions to your chosen pharmacy for a quick and hassle-free visit. Real-time navigation ensures you reach your destination easily and on time.</p>
             </div>
           </div>
         </div>

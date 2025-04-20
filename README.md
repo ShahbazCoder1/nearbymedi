@@ -10,72 +10,162 @@ NearByMedi provides a system where:
 1. **Users:** Can search for medicines and find the nearest shop that has the medicine in stock. Additionally, it provides a map and directions to the shop for convenience.
 2. **Shop Owners:** Can upload Excel sheets of medicines available in their shop to add their shop to the system.
 
-## Workflow
-Below is the system architecture diagram illustrating the workflow of "NearByMedi":
+---
 
-![System Architecture Diagram](path/to/diagram.png)
+## Landing Page
+Here is a screenshot of the landing page for the application:
+
+![Landing Page UI](assets/LandingPageUI.png)
+
+---
+
+## Workflow
+Below is the backend flowchart illustrating the system architecture of "NearByMedi":
+
+![Backend Flowchart](assets/BackendDescription.png)
 
 ### Diagram Description
-The diagram showcases the following components and their interactions:
+The flowchart shows how different components of the system interact:
 1. **Frontend**:
-   - **For Users:** Accepts inputs like **longitude**, **latitude**, and **medicine**, and displays the nearest shops with the requested medicine.
-   - **For Shop Owners:** Provides an interface to upload Excel sheets containing details of medicines available in their shop.
+   - Users can search for medicines, and shop owners can upload Excel sheets.
 2. **API**:
-   - Acts as the intermediary between the **Frontend** and **Backend**.
-   - Processes requests from both users and shop owners.
+   - Mediates between the frontend and backend.
+   - Hosted on [Render](https://render.com) for scalability and reliability.
 3. **Backend**:
-   - **For Users:** Handles core processing tasks like distance calculation and fetching pharmacy details.
-   - **For Shop Owners:** Processes the uploaded Excel sheets, extracts shop and medicine details, and updates the database.
-4. **Distance Calculator**:
-   - Calculates distances using the **Haversine Formula**.
-   - Provides distance data to the backend.
-5. **Database**:
-   - Stores and manages multiple tables:
-     - **User Table**: Stores user credentials and roles.
-     - **Medicines Table**: Maps pharmacies to the medicines they stock.
-     - **Pharmacy Table**: Contains pharmacy details, including longitude, latitude, and address.
-     - **Ratings and Reviews Table**: Tracks pharmacy ratings and reviews.
+   - Handles core tasks such as querying the database, calculating distances, and processing medicine data.
+   - Uses a new external API to fetch medicine descriptions.
+4. **Database**:
+   - Stores user credentials, pharmacy details, and medicine mappings.
+5. **Distance Calculator**:
+   - Computes the distance between the user's location and nearby pharmacies using the Haversine formula.
 
-*Note: The system architecture and workflows were designed using [Excalidraw](https://excalidraw.com).*
-
-## Tech Stack
-- **Frontend:** React
-- **Backend:** Flask, Python
-- **Database:** SupaBase ([Dashboard](https://supabase.com/dashboard/))
-- **Mapping APIs:** Ola Maps ([Documentation](https://maps.olakrutrim.com/docs)), OpenStreetMap API
-- **Dataset Source:** Kaggle
-- **File Handling:** Excel Sheet Processing
+---
 
 ## Features
 1. **Medicine Search:** Users can search for a medicine to check its availability.
 2. **Nearest Shop Locator:** The system identifies and displays the nearest shop where the medicine is available.
 3. **Shop Description:** Provides a short description of the shop.
-4. **Map Integration:** Displays a map with directions to the shop.
-5. **Shop Owner Integration:** Allows shop owners to upload Excel sheets containing details of available medicines to add or update their shop in the system.
+4. **Medicine Details:** Uses a new external API for fetching accurate medicine descriptions.
+5. **Map Integration:** Displays a map with directions to the shop.
+6. **Shop Owner Dashboard:** Allows shop owners to upload Excel sheets containing details of available medicines to add or update their shop in the system.
+
+---
+
+## User Guide
+Here’s how users can use the system:
+
+1. **Step 1: Search**
+   - Enter the name of the required medicine and click search.
+   ![Step 1: Search](assets/step1.gif)
+
+2. **Step 2: View Map**
+   - See the nearest shops where the medicine is available on a map.
+   - Directions are provided for navigation.
+   ![Step 2: View Map](assets/step2.gif)
+
+3. **Step 3: Navigate**
+   - Use the map to navigate to the pharmacy with the desired medicine.
+   ![Step 3: Navigate](assets/Step3.gif)
+
+---
+
+## Dashboard Design
+We explored three dashboard designs and finalized the third one for its simplicity and clarity. Below are the designs:
+
+- **Design 1:**
+  ![Design 1](assets/Design%201.png)
+
+- **Design 2:**
+  ![Design 2](assets/Design%202.png)
+
+- **Design 3 (Final):**
+  ![Final Design](assets/Design%203%20(Final).png)
+
+---
+
+## Deployment Plans
+- **Domain Purchase:** We have purchased the domain [nearbymedi.store](https://nearbymedi.store) to provide users with a professional and easy-to-remember URL.
+- **API Hosting:** The Flask API is hosted on [Render](https://render.com) for scalability and reliability.
+- **Frontend Hosting:** The frontend is deployed on [nearbymedi.store](https://nearbymedi.store), making the application accessible to all users.
+
+---
 
 ## Implementation Details
 1. **Backend Data:**
    - We used Kaggle's free dataset: [AZ Medicine Dataset of India](https://www.kaggle.com/datasets/shudhanshusingh/az-medicine-dataset-of-india) to gather information on all available medications in India.
-   - For shop coordinates, major cities in West Bengal were sourced from Wikipedia. OpenStreetMap API was used to collect data on surrounding cities and villages, with Ola Maps API providing detailed shop information ([Ola Maps Documentation](https://maps.olakrutrim.com/docs)).
-2. **Distance Calculation:**
-   - The Haversine formula was employed to calculate the distances between the user's location and the shops.
-3. **Excel Sheet Processing:**
-   - The backend processes uploaded Excel files to extract shop and medicine details, which are then added or updated in the database.
-4. **Frontend Integration:**
-   - A user-friendly interface was developed to ensure a seamless experience for both users and shop owners.
+   - For shop coordinates, we sourced data from Wikipedia and OpenStreetMap.
+   - Integrated a new external API to fetch detailed descriptions of medicines.
+2. **Database Limitations:**
+   - Due to time constraints, the database currently only covers shops and pharmacies in **West Bengal**.
+   - Scraping and preparing data for West Bengal alone took **6+ hours**. Here is a screenshot of the scraping process:
+     ![Scraping Data](assets/scraping_data.png)
+3. **Distance Calculation:**
+   - The Haversine formula was employed to compute distances between users and pharmacies.
+4. **Excel Sheet Processing:**
+   - The backend processes Excel files uploaded by shop owners, extracts shop and medicine details, and updates the database.
+5. **Frontend Integration:**
+   - A user-friendly interface ensures a seamless experience for both users and shop owners.
+
+---
 
 ## Challenges Faced
-1. **Data Collection:** Merging data from different sources was time-consuming and required significant effort.
-2. **Distance Calculations:** Applying the Haversine formula for distance calculation was complex.
-3. **UI/UX Design:** Multiple design attempts were made to achieve an optimal user interface.
-4. **Branch Merging:** Difficulties were encountered while merging teammates' branches into the main branch.
-5. **Excel File Handling:** Ensuring accurate parsing and validation of data from uploaded Excel sheets.
+1. **Time Constraints:** Developing the system in just 48 hours required reliance on free assets and open-source libraries.
+2. **Data Collection:** Merging data from various sources was time-consuming and challenging.
+3. **Dashboard Design:** Iterative design processes were required to finalize the most user-friendly UI.
+4. **Excel File Handling:** Ensuring accurate parsing and validation of uploaded Excel sheets.
+
+---
+
+## Use of AI Tools and Old Assets
+Due to the limited time and resources available, we leveraged several AI tools and pre-existing assets to expedite the design and development process. These tools helped us with:
+1. Creating visual elements and user interface designs.
+2. Generating backend flowcharts and diagrams.
+3. Utilizing pre-existing templates and datasets.
+
+This allowed us to focus on implementing the core functionality of the project while ensuring a visually appealing and functional user experience.
+
+---
+
+## Future Scope
+While the current version of NearByMedi is functional, several planned features remain incomplete due to time constraints. Below is the future scope for the project:
+
+1. **Expanding Database Coverage:**
+   - Currently, the database is limited to shops and pharmacies in West Bengal.
+   - Expanding the coverage to include other Indian states and eventually nationwide is a priority.
+
+2. **Improving Medicine Descriptions:**
+   - The new external API for fetching medicine descriptions has been integrated, but its coverage needs to be enhanced for a broader range of medicines.
+
+3. **Advanced Search Features:**
+   - Add filters for price ranges, brand preferences, and shop ratings to improve the user experience.
+
+4. **Delivery Integration:**
+   - Enable users to place orders for home delivery from nearby pharmacies.
+
+5. **User Reviews and Ratings:**
+   - Allow users to leave reviews and ratings for shops, helping others make informed decisions.
+
+6. **Bug Fixes and Stability Improvements:**
+   - Address issues in features that are not fully functional due to time constraints.
+
+7. **Enhanced Dashboard for Shop Owners:**
+   - Provide shop owners with analytics, such as most searched medicines and daily traffic data.
+
+8. **Mobile App Development:**
+   - Develop Android and iOS applications for better accessibility.
+
+9. **Scaling the System:**
+   - Optimize the backend to handle larger datasets and higher traffic as the platform scales.
+
+---
 
 ## What We Learned
 - The importance of efficient data collection and integration.
 - Implementing advanced distance calculation methods such as the Haversine formula.
 - Overcoming UI/UX challenges and refining design approaches.
-- Effective collaboration and branch management in team projects.
-- Handling and validating Excel file uploads for database updates.
+- Leveraging free assets, AI tools, and open-source libraries under tight deadlines.
 
-*Note: Attachments such as diagrams and design attempts are to be included in the appropriate repository folder.*
+---
+
+## Team Effort
+All team members worked over **12 hours per day** for the last two days to bring this system to life. The hard work and collaboration of the team were crucial to achieving this milestone.

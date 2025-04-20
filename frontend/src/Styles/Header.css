@@ -2,19 +2,21 @@
 
 :root {
   --brand-green: #10a554;
-  --medical-blue: #1E88E5;
-  --neutral-dark: #2E3B4E;
-  --light-mint: #E8F5E9;
-  --soft-teal: #B2DFDB;
-  --light-gray: #F5F7FA;
-  --availability-green: #43A047;
-  --warning-orange: #F57C00;
-  --alert-red: #E53935;
+  --medical-blue: #1e88e5;
+  --neutral-dark: #2e3b4e;
+  --light-mint: #e8f5e9;
+  --soft-teal: #b2dfdb;
+  --light-gray: #f5f7fa;
+  --availability-green: #43a047;
+  --warning-orange: #f57c00;
+  --alert-red: #e53935;
 }
 
 .main-header {
   width: 100%;
-  background: linear-gradient(180deg, rgba(16, 165, 84, 0.08) 0%, rgba(16, 165, 84, 0.02) 100%);
+  background: linear-gradient(180deg,
+      rgba(16, 165, 84, 0.08) 0%,
+      rgba(16, 165, 84, 0.02) 100%);
   position: relative;
   z-index: 100;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -171,6 +173,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -343,7 +346,9 @@
 .mobile-search-container {
   display: none;
   padding: 0 16px 16px;
-  background: linear-gradient(180deg, rgba(16, 165, 84, 0.05) 0%, rgba(16, 165, 84, 0.01) 100%);
+  background: linear-gradient(180deg,
+      rgba(16, 165, 84, 0.05) 0%,
+      rgba(16, 165, 84, 0.01) 100%);
 }
 
 /* Mobile Menu button */
@@ -356,92 +361,63 @@
   margin-left: 8px;
 }
 
-/* Mobile Menu */
-.mobile-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 50;
-  animation: slideDownFade 0.3s ease-in-out;
-  padding: 16px;
-}
-
-.mobile-location-selector {
-  margin-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 16px;
-}
-
-.mobile-menu .nav-links {
-  flex-direction: column;
-  width: 100%;
-}
-
-.mobile-menu .nav-links li {
-  margin: 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.mobile-menu .nav-links li a,
-.mobile-menu .mobile-user-menu-item button {
-  display: block;
-  padding: 12px 16px;
-  font-size: 16px;
-  width: 100%;
-  text-align: left;
-}
-
-.mobile-menu .mobile-user-menu-item {
-  display: flex;
-  align-items: center;
-}
-
-.mobile-menu .mobile-user-menu-item a,
-.mobile-menu .mobile-user-menu-item button {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  color: var(--neutral-dark);
-  padding: 12px 16px;
-  width: 100%;
-}
-
-.mobile-menu .mobile-user-menu-item.logout button {
-  color: var(--alert-red);
-}
-
-.mobile-menu .mobile-user-menu-item.logout svg {
-  color: var(--alert-red);
-}
-
-.mobile-menu .mobile-auth-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 16px;
-  justify-content: center;
-}
-
-.mobile-menu .mobile-auth-buttons button {
-  flex: 1;
-}
-
+/* Slide+fade animation (already declared) */
 @keyframes slideDownFade {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-10%);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Mobile menu */
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  padding: 16px;
+  opacity: 0;
+  transform: translateY(-10%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.mobile-menu.open {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile search container */
+.mobile-search-container {
+  display: none;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.mobile-search-container.open {
+  display: block;
+  max-height: 200px;
+  /* adjust to fit your search bar height */
+  opacity: 1;
+}
+
+/* Chevron rotation */
+.dropdown-chevron {
+  transition: transform 0.2s ease;
+}
+
+.dropdown-chevron.rotate {
+  transform: rotate(180deg);
 }
 
 /* Responsive styles */
@@ -460,11 +436,11 @@
   .header-nav {
     display: none;
   }
-  
+
   .line {
     display: none;
   }
-  
+
   .mobile-menu-button {
     display: block;
   }
@@ -476,7 +452,7 @@
   .dashboard-header .location-selector-container {
     display: none;
   }
-  
+
   .user-name {
     display: none;
   }
@@ -486,41 +462,41 @@
   .dashboard-header .header-container {
     grid-template-columns: auto auto;
   }
-  
+
   .dashboard-header .header-center {
     display: none;
   }
-  
+
   .mobile-search-toggle {
     display: flex;
   }
-  
+
   .mobile-search-container {
     display: block;
   }
-  
+
   .header-container {
     padding: 12px 16px;
   }
-  
+
   .header-title {
     font-size: 18px;
     margin-right: 0;
   }
-  
+
   .logo-image {
     height: 32px;
     width: 32px;
   }
-  
+
   .user-profile-button {
     padding: 6px;
   }
-  
+
   .dropdown-chevron {
     display: none;
   }
-  
+
   .sign-in-btn,
   .sign-up-btn {
     padding: 6px 12px;
@@ -532,7 +508,7 @@
   .header-container {
     padding: 10px;
   }
-  
+
   .header-title {
     font-size: 16px;
     max-width: 100px;
@@ -540,18 +516,54 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
   .logo-image {
     height: 28px;
     width: 28px;
   }
-  
-  .sign-in-btn {
-    display: none;
-  }
-  
+
   .sign-up-btn {
     padding: 6px 10px;
     font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* 1) Force the mobile menu to be visible & animating */
+  .mobile-menu {
+    /* display: block; */
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 2) Stack your nav‑links one under the other */
+  .mobile-menu .nav-links {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-menu .nav-links li {
+    margin: 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .mobile-menu .nav-links li:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-menu .nav-links a {
+    display: block;
+    padding: 12px 16px;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  /* 3) Hide the auth‑buttons in the mobile menu */
+  .mobile-menu .mobile-auth-buttons {
+    display: none;
   }
 }

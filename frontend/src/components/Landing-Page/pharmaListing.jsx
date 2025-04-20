@@ -33,33 +33,31 @@ const PharmacyListing = () => {
           </div>
           <h2 className="pharmacy-title reveal">Growing Your Pharmacy Business Made Simple</h2>
           <p className="pharmacy-subtitle reveal">
-            Join our network of trusted pharmacies and expand your customer base. 
-            Our platform helps you manage inventory, connect with patients, 
-            and increase your business visibility—all in real-time.
+          Join our trusted network of pharmacies and expand your customer base effortlessly. NearByMedi helps you showcase your available medicines, store location, and real-time open/closed status—making it easy for patients nearby to find exactly what they need.
           </p>
           
           <div className="benefits-container reveal">
             <div className="benefit-item">
               <Activity className="benefit-icon" size={22} />
               <div className="benefit-text">
-                <h4>Real-time Inventory</h4>
-                <p>Update stock levels instantly and automatically</p>
+                <h4>Real-Time Stock Visibility</h4>
+                <p>Keep your medicine availability updated to ensure customers see what’s in stock. Regular updates build trust and help patients find their medicines reliably.</p>
               </div>
             </div>
             
             <div className="benefit-item">
               <Users2 className="benefit-icon" size={22} />
               <div className="benefit-text">
-                <h4>Customer Connection</h4>
-                <p>Reach patients searching for available medicines</p>
+                <h4>Store Location & Status</h4>
+                <p>Show your pharmacy’s location and real-time open/closed status to help customers find you easily and plan their visits. Clear, up-to-date info boosts convenience, trust, and satisfaction.</p>
               </div>
             </div>
             
             <div className="benefit-item">
               <BarChart3 className="benefit-icon" size={22} />
               <div className="benefit-text">
-                <h4>Analytics Dashboard</h4>
-                <p>Track performance with powerful business insights</p>
+                <h4>Easy Inventory Management</h4>
+                <p>Quickly add, update, or upload your medicine inventory with ease using Excel. Manage your listings accurately and save time effortlessly.</p>
               </div>
             </div>
           </div>

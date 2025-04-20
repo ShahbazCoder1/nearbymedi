@@ -1,15 +1,16 @@
-/* Login.css - Styles for login component */
-
-/* Base styles and resets are inherited from the global styles */
-
-/* Background with gradient (same as signup) */
 .login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f0ffe8;
+  background: linear-gradient(
+    132deg,
+    rgba(240, 255, 232, 1) 0%,
+    rgba(127, 181, 109, 1) 51%,
+    rgba(240, 255, 232, 1) 100%
+  );
 }
 
 /* Login card */
@@ -25,7 +26,7 @@
 /* Branding and headings */
 .login-header {
   text-align: center;
-  margin-bottom: 32px;
+  /* margin-bottom: 32px; */
 }
 
 .login-title {
@@ -41,6 +42,37 @@
   margin-bottom: 24px;
 }
 
+/* Registration type select */
+.registration-type-select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #444;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23444' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
+.registration-type-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
+}
+
+.registration-type-select:hover {
+  border-color: #10a554;
+}
+
 /* Form styling */
 .login-form {
   display: flex;
@@ -50,7 +82,7 @@
 
 /* Button styling */
 .login-button {
-  background: #667eea;
+  background: #10a554;
   color: white;
   border: none;
   border-radius: 6px;
@@ -66,7 +98,7 @@
 }
 
 .login-button:hover {
-  background: #5a6edb;
+  background: #089045;
 }
 
 .login-button:disabled {

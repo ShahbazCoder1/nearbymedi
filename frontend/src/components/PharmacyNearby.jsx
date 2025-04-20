@@ -27,6 +27,8 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation }) 
   const [pharmacies, setPharmacies] = useState([]);
   const [medicineInfo, setMedicineInfo] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [detailedMedicineInfo, setDetailedMedicineInfo] = useState(null);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   
   const location = useLocation();
   const containerRef = useRef(null);
@@ -144,6 +146,33 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation }) 
     
     loadData();
   }, [location.state, userLocation]);
+
+  // Fetch detailed medicine information when the details tab is selected
+  useEffect(() => {
+    const fetchMedicineDetails = async () => {
+      if (activeTab === 'details' && medicineInfo && !detailedMedicineInfo) {
+        setIsLoadingDetails(true);
+        try {
+          // Encode the medicine name for the URL
+          const encodedName = encodeURIComponent(medicineInfo.name);
+          const response = await fetch(`https://nearbymedi-1.onrender.com/medicine?name=${encodedName}`);
+          
+          if (response.ok) {
+            const data = await response.json();
+            setDetailedMedicineInfo(data);
+          } else {
+            console.error('Failed to fetch medicine details:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error fetching medicine details:', error);
+        } finally {
+          setIsLoadingDetails(false);
+        }
+      }
+    };
+    
+    fetchMedicineDetails();
+  }, [activeTab, medicineInfo, detailedMedicineInfo]);
 
   // Function to generate fallback pharmacy data (when API fails)
   const getFallbackPharmacies = (centerLat, centerLng) => {
@@ -452,9 +481,45 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation }) 
           <div className="details-tab">
             <div className="medicine-details-section">
               <h3>About {medicineInfo.name}</h3>
-              <p className="medicine-description">{medicineInfo.description}</p>
               
-              {/* Details content will be added by user later */}
+              {isLoadingDetails ? (
+                <div className="details-loading">
+                  <div className="skeleton-line"></div>
+                  <div className="skeleton-line"></div>
+                  <div className="skeleton-line"></div>
+                </div>
+              ) : detailedMedicineInfo ? (
+                <div className="medicine-details-content">
+                  <h4>Description</h4>
+                  <p className="medicine-description">{detailedMedicineInfo.description}</p>
+                  <div className="medicine-details-card">
+                    <h4>Quick Info</h4>
+                    <div className="info-grid">
+                      <div className="info-item">
+                        <span className="info-key">Name:</span>
+                        <span className="info-value">{detailedMedicineInfo.name}</span>
+                      </div>
+                      {detailedMedicineInfo.composition && (
+                        <div className="info-item">
+                          <span className="info-key">Composition:</span>
+                          <span className="info-value">{detailedMedicineInfo.composition}</span>
+                        </div>
+                      )}
+                      {detailedMedicineInfo.uses && (
+                        <div className="info-item">
+                          <span className="info-key">Uses:</span>
+                          <span className="info-value">{detailedMedicineInfo.uses}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="no-details-state">
+                  <AlertCircle size={24} />
+                  <p>No detailed information available for this medicine at the moment.</p>
+                </div>
+              )}
             </div>
           </div>
         )}

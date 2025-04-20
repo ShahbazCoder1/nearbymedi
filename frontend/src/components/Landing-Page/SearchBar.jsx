@@ -125,11 +125,11 @@ const SearchBar = ({ isDashboard }) => {
     if (searchTerm.trim()) {
       console.log("Searching for:", searchTerm);
       
-      // If not on dashboard page, redirect to dashboard with search query
+      
       if (!isDashboard) {
         navigate('/dashboard', { state: { searchQuery: searchTerm } });
       }
-      // If already on dashboard, just perform search (which is handled by the console.log above)
+      
     } else {
       setShowSuggestions(true);
     }

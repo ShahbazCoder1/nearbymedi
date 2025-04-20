@@ -6,13 +6,6 @@ export const validateSignUpForm = (formData) => {
     errors.fullName = "Full name is required";
   }
 
-  // Mobile Number validation
-  if (!formData.mobileNumber.trim()) {
-    errors.mobileNumber = "Mobile number is required";
-  } else if (!/^\d{10}$/.test(formData.mobileNumber.trim())) {
-    errors.mobileNumber = "Enter a valid 10-digit mobile number";
-  }
-
   // Email validation
   if (!formData.email.trim()) {
     errors.email = "Email address is required";

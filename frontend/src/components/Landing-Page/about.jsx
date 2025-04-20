@@ -11,7 +11,7 @@ const About = () => {
             About <span className="highlight">NearbyMedi</span>
           </h2>
           <p className="section-subheading">
-            Your medicine finder platform
+          Find Medicines Near You, Fast
           </p>
         </div>
 
@@ -28,14 +28,12 @@ const About = () => {
             <h3>What is NearbyMedi?</h3>
             
             <p className="intro-text">
-              NearbyMedi helps you find medicines at nearby pharmacies based on your location.
+            NearByMedi is your smart solution for quickly finding the medicines you need at local pharmacies, right when you need them.
             </p>
             
             <div className="about-description">
               <p>
-                Simply enter a medicine name and your location (or use GPS), and we'll show you which 
-                nearby pharmacies have the medicine in stock. No more calling around or visiting 
-                multiple stores to find what you need.
+              Just enter the medicine name and your location (or let GPS do the work), and instantly see which nearby pharmacies have it in stock and are open. Skip the stress of calling around or visiting multiple stores—NearByMedi saves you time and brings peace of mind by connecting you to the right pharmacy, fast.
               </p>
             </div>
             

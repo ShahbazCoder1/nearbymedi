@@ -3,157 +3,123 @@ import { Link, useNavigate } from "react-router-dom";
 import LocationSelector from "./Map/LocationSelector";
 import SearchInp from "./Search";
 import "../Styles/Header.css";
-import { 
-  UserCircle, 
-  Menu, 
-  X, 
-  Settings, 
-  LogOut, 
-  Clock, 
-  Heart, 
+import {
+  UserCircle,
+  Menu,
+  X,
+  Settings,
+  LogOut,
+  Clock,
+  Heart,
   Search,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
-
-// You would replace this with your actual logo import
 import Logo from "../assets/logo1.png";
 
-const Header = ({ isDashboard, onLocationChange }) => {
+const Header = ({ isDashboard }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Set to true when user is logged in
-  const [userLocation, setUserLocation] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userDropdownRef = useRef(null);
   const navigate = useNavigate();
-  
-  // Handle click outside user dropdown to close it
+
+  // Close user dropdown on outside click
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+    function handleClickOutside(e) {
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(e.target)
+      ) {
         setUserDropdownOpen(false);
       }
     }
-    
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  
-  const toggleMenu = () => setMenuOpen((prev) => !prev);
-  const toggleUserDropdown = () => setUserDropdownOpen((prev) => !prev);
-
-  // Handle location change from selector
-  const handleLocationChange = (location) => {
-    setUserLocation(location);
-    // Forward the location to parent component if callback exists
-    if (onLocationChange) {
-      onLocationChange(location);
-    }
-  };
-
-  // Navigation handlers
-  const handleSignIn = () => {
-    navigate("/login");
-  };
-  
-  const handleSignUp = () => {
-    navigate("/signup");
-  };
 
   return (
     <header className={`main-header ${isDashboard ? "dashboard-header" : ""}`}>
       <div className="header-container">
-        {/* Left Section - Logo and Name */}
+        {/* LEFT */}
         <div className="header-left">
-          <div className="logo">
-            <Link to="/">
-              <img src={Logo} alt="Medicare Logo" className="logo-image" />
-            </Link>
-          </div>
+          <Link to="/" className="logo">
+            <img src={Logo} alt="NearbyMedi" className="logo-image" />
+          </Link>
           <h1 className="header-title">NearbyMedi</h1>
-          
+
           {!isDashboard && (
             <>
-              <div className="line"></div>
+              <div className="line" />
               <nav className="header-nav">
                 <ul className="nav-links">
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <a href="#about">About Us</a>
-                  </li>
-                  <li>
-                    <a href="#how">How It Works</a>
-                  </li>
-                  <li>
-                    <a href="#list-pharmacy">For Pharmacies</a>
-                  </li>
-                  <li>
-                    <a href="#faq">FAQs</a>
-                  </li>
+                  {[
+                    "Home",
+                    "About Us",
+                    "How It Works",
+                    "For Pharmacies",
+                    "FAQs",
+                  ].map((txt) => (
+                    <li key={txt}>
+                      <a href={`#${txt.toLowerCase().replace(/\s+/g, "-")}`}>
+                        {txt}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </nav>
             </>
           )}
-          
+
           {isDashboard && (
             <div className="location-selector-container">
-              <LocationSelector onLocationChange={handleLocationChange} />
+              <LocationSelector />
             </div>
           )}
         </div>
-        
-        {/* Center Section - Search Bar (only in dashboard) */}
+
+        {/* CENTER */}
         {isDashboard && (
           <div className="header-center">
-            <SearchInp isDashboard={true} userLocation={userLocation} />
+            <SearchInp />
           </div>
         )}
-        
-        {/* Right Section - Auth/User Profile */}
+
+        {/* RIGHT */}
         <div className="header-right">
           {isLoggedIn ? (
             <div className="user-profile-container" ref={userDropdownRef}>
-              <button 
-                className="user-profile-button" 
-                onClick={toggleUserDropdown}
-                aria-haspopup="true" 
-                aria-expanded={userDropdownOpen}
+              <button
+                className="user-profile-button"
+                onClick={() => setUserDropdownOpen((p) => !p)}
               >
-                <div className="user-avatar">
-                  <UserCircle size={24} className="profile-icon" />
-                </div>
+                <UserCircle size={24} className="profile-icon" />
                 <span className="user-name">John Doe</span>
-                <ChevronDown size={16} className={`dropdown-chevron ${userDropdownOpen ? 'rotate' : ''}`} />
+                <ChevronDown
+                  size={16}
+                  className={`dropdown-chevron ${userDropdownOpen ? "rotate" : ""
+                    }`}
+                />
               </button>
-              
               {userDropdownOpen && (
                 <div className="user-dropdown">
                   <div className="user-dropdown-header">
                     <span className="user-email">john.doe@example.com</span>
                   </div>
                   <ul className="user-dropdown-menu">
-                    <li>
-                      <button className="dropdown-item">
-                        <Settings size={16} />
-                        <span>Settings</span>
-                      </button>
-                    </li>
-                    <li>
-                      <button className="dropdown-item">
-                        <Clock size={16} />
-                        <span>Search History</span>
-                      </button>
-                    </li>
-                    <li>
-                      <button className="dropdown-item">
-                        <Heart size={16} />
-                        <span>Saved Pharmacies</span>
-                      </button>
-                    </li>
-                    <li className="divider"></li>
+                    {[
+                      ["Settings", Settings],
+                      ["Search History", Clock],
+                      ["Saved Pharmacies", Heart],
+                    ].map(([label, Icon]) => (
+                      <li key={label}>
+                        <button className="dropdown-item">
+                          <Icon size={16} />
+                          <span>{label}</span>
+                        </button>
+                      </li>
+                    ))}
+                    <li className="divider" />
                     <li>
                       <button className="dropdown-item logout">
                         <LogOut size={16} />
@@ -166,105 +132,84 @@ const Header = ({ isDashboard, onLocationChange }) => {
             </div>
           ) : (
             <div className="auth-buttons">
-              <button className="sign-in-btn" onClick={handleSignIn}>Sign In</button>
-              <button className="sign-up-btn" onClick={handleSignUp}>Sign Up</button>
+              <button
+                className="sign-in-btn"
+                onClick={() => navigate("/login")}
+              >
+                Sign In
+              </button>
+              <button
+                className="sign-up-btn"
+                onClick={() => navigate("/signup")}
+              >
+                Sign Up
+              </button>
             </div>
           )}
-          
-          {/* Mobile Search Toggle (only in dashboard) */}
+
+          {/* Mobile Search Toggle */}
           {isDashboard && (
-            <button className="mobile-search-toggle">
+            <button
+              className="mobile-search-toggle"
+              onClick={() => setSearchOpen((p) => !p)}
+            >
               <Search size={20} />
             </button>
           )}
-          
-          {/* Hamburger Menu Toggle */}
+
+          {/* Hamburger Toggle */}
           <button
             className="mobile-menu-button"
-            onClick={toggleMenu}
+            onClick={() => setMenuOpen((p) => !p)}
             aria-label="Toggle menu"
           >
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
-      
-      {/* Mobile Search Bar (only in dashboard) */}
+
+      {/* Mobile Search Bar */}
       {isDashboard && (
-        <div className="mobile-search-container">
-          <SearchInp isDashboard={true} userLocation={userLocation} />
+        <div className={`mobile-search-container ${searchOpen ? "open" : ""}`}>
+          <SearchInp />
         </div>
       )}
-      
+
       {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="mobile-menu">
-          {isDashboard && (
-            <div className="mobile-location-selector">
-              <LocationSelector />
-            </div>
-          )}
-          
-          <ul className="nav-links">
-            <li>
-              <Link to="/" onClick={toggleMenu}>
-                Home
-              </Link>
+      <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
+        {isDashboard && (
+          <div className="mobile-location-selector">
+            <LocationSelector />
+          </div>
+        )}
+        <ul className="nav-links">
+          {[
+            "Home",
+            ...(isDashboard
+              ? []
+              : ["About Us", "How It Works", "For Pharmacies", "FAQs"]),
+          ].map((txt) => (
+            <li key={txt}>
+              <a
+                href={`#${txt.toLowerCase().replace(/\s+/g, "-")}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                {txt}
+              </a>
             </li>
-            {!isDashboard && (
-              <>
-                <li>
-                  <a href="#about" onClick={toggleMenu}>About Us</a>
-                </li>
-                <li>
-                  <a href="#how" onClick={toggleMenu}>How It Works</a>
-                </li>
-                <li>
-                  <a href="#list-pharmacy" onClick={toggleMenu}>For Pharmacies</a>
-                </li>
-                <li>
-                  <a href="#faq" onClick={toggleMenu}>FAQs</a>
-                </li>
-              </>
-            )}
-            {isLoggedIn && (
-              <>
-                <li className="mobile-user-menu-item">
-                  <Link to="/settings" onClick={toggleMenu}>
-                    <Settings size={18} />
-                    <span>Settings</span>
-                  </Link>
-                </li>
-                <li className="mobile-user-menu-item">
-                  <Link to="/history" onClick={toggleMenu}>
-                    <Clock size={18} />
-                    <span>Search History</span>
-                  </Link>
-                </li>
-                <li className="mobile-user-menu-item">
-                  <Link to="/saved" onClick={toggleMenu}>
-                    <Heart size={18} />
-                    <span>Saved Pharmacies</span>
-                  </Link>
-                </li>
-                <li className="mobile-user-menu-item logout">
-                  <button onClick={toggleMenu}>
-                    <LogOut size={18} />
-                    <span>Log Out</span>
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
-          
-          {!isLoggedIn && (
-            <div className="mobile-auth-buttons">
-              <button className="sign-in-btn" onClick={handleSignIn}>Sign In</button>
-              <button className="sign-up-btn" onClick={handleSignUp}>Sign Up</button>
-            </div>
-          )}
-        </div>
-      )}
+          ))}
+        </ul>
+        {!isLoggedIn && (
+          <div className="mobile-auth-buttons">
+            <button className="sign-in-btn" onClick={() => navigate("/login")}>
+              Sign In
+            </button>
+            <button className="sign-up-btn" onClick={() => navigate("/signup")}>
+              Sign Up
+            </button>
+          </div>
+        )}
+      </div>
     </header>
   );
 };

@@ -606,7 +606,7 @@
 /* Pharmacy card header */
 .pharmacy-header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin-bottom: 12px;
   gap: 8px;
 }

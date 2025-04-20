@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import "../Styles/SignUp.css"; 
+import React, { useState, useEffect } from "react";
+import "../Styles/SignUp.css";
 import FormInput from "./FormInput";
 import SuccessMessage from "./SuccessMessage";
 import { validateSignUpForm } from "../Utils/validation";
@@ -10,10 +10,10 @@ const SignUp = () => {
   // State for form fields
   const [formData, setFormData] = useState({
     fullName: "",
-    mobileNumber: "",
     email: "",
     password: "",
     confirmPassword: "",
+    registrationType: "user" // Add this line
   });
 
   // State for form validation
@@ -24,6 +24,28 @@ const SignUp = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   // State for server errors
   const [serverError, setServerError] = useState("");
+
+  // Check if profiles table exists on component mount
+  useEffect(() => {
+    const checkProfilesTable = async () => {
+      try {
+        // Try to get the schema information about the profiles table
+        const { error } = await supabase
+          .from('profiles')
+          .select('count')
+          .limit(1);
+
+        // If there's an error about the table not existing, we'll handle it in the form submission
+        if (error && error.message.includes('does not exist')) {
+          console.log('Profiles table does not exist.');
+        }
+      } catch (err) {
+        console.error("Error checking profiles table:", err);
+      }
+    };
+
+    checkProfilesTable();
+  }, []);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -62,7 +84,7 @@ const SignUp = () => {
           options: {
             data: {
               full_name: formData.fullName,
-              mobile_number: formData.mobileNumber,
+              user_type: formData.registrationType
             }
           }
         });
@@ -71,31 +93,61 @@ const SignUp = () => {
           throw error;
         }
 
-        // If signup is successful, you might want to save additional user data
-        // to your profiles table in Supabase if needed
+        // If signup is successful, try to save additional user data
         if (data.user) {
-          // Optional: Insert additional user data into a custom profiles table
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .insert([
-              { 
-                user_id: data.user.id, 
-                full_name: formData.fullName,
-                mobile_number: formData.mobileNumber,
-                email: formData.email
-              }
-            ]);
+          try {
+            // Try to insert into profiles table
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .insert([
+                {
+                  user_id: data.user.id,
+                  full_name: formData.fullName,
+                  email: formData.email,
+                  user_type: formData.registrationType
+                }
+              ]);
 
-          if (profileError) {
-            console.error("Error saving profile data:", profileError);
-            // Continue anyway since the user was created
+            if (profileError) {
+              // If the error is not about the table missing, log it
+              if (!profileError.message.includes('does not exist')) {
+                console.error("Error saving profile data:", profileError);
+              } else {
+                // Table doesn't exist - we'll rely on auth metadata only
+                console.log("Profiles table doesn't exist. Using auth metadata only.");
+              }
+            }
+          } catch (profileErr) {
+            console.error("Error during profile creation:", profileErr);
+          }
+
+          // If user is a shop owner, try to create an entry in the shops table
+          if (formData.registrationType === 'shop') {
+            try {
+              const { error: shopError } = await supabase
+                .from('shops')
+                .insert([
+                  {
+                    owner_id: data.user.id,
+                    name: `${formData.fullName}'s Shop`,
+                    address: "Address not set",
+                    pincode: "000000"
+                  }
+                ]);
+
+              if (shopError && !shopError.message.includes('does not exist')) {
+                console.error("Error creating shop:", shopError);
+              }
+            } catch (shopErr) {
+              console.error("Error during shop creation:", shopErr);
+            }
           }
         }
 
         setIsSubmitting(false);
         setIsSubmitted(true);
         console.log("User registered successfully:", data);
-        
+
       } catch (error) {
         console.error("Registration error:", error);
         setServerError(error.message || "Failed to create account. Please try again.");
@@ -132,6 +184,15 @@ const SignUp = () => {
         <div className="signup-header">
           <h1 className="signup-title">Create your account</h1>
           <p className="signup-subtitle">Fill in the details to get started</p>
+          <select
+            name="registrationType"
+            value={formData.registrationType}
+            onChange={handleChange}
+            className="registration-type-select"
+          >
+            <option value="user">User Registration</option>
+            <option value="shop">Shop Owner Registration</option>
+          </select>
         </div>
 
         {serverError && (
@@ -150,17 +211,6 @@ const SignUp = () => {
             onChange={handleChange}
             placeholder="Enter your full name"
             error={errors.fullName}
-          />
-
-          <FormInput
-            label="Mobile Number"
-            id="mobileNumber"
-            name="mobileNumber"
-            type="tel"
-            value={formData.mobileNumber}
-            onChange={handleChange}
-            placeholder="Enter your mobile number"
-            error={errors.mobileNumber}
           />
 
           <FormInput
