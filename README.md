@@ -112,7 +112,7 @@ We explored three dashboard designs and finalized the third one for its simplici
 1. **Time Constraints:** Developing the system in just 48 hours required reliance on free assets and open-source libraries.
 2. **Data Collection:** Merging data from various sources was time-consuming and challenging.
 3. **Dashboard Design:** Iterative design processes were required to finalize the most user-friendly UI.
-4. **Excel File Handling:** Ensuring accurate parsing and validation of uploaded Excel sheets.
+
 
 ---
 
