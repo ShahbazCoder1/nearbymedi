@@ -139,22 +139,19 @@ While the current version of NearByMedi is functional, several planned features 
 3. **Advanced Search Features:**
    - Add filters for price ranges, brand preferences, and shop ratings to improve the user experience.
 
-4. **Delivery Integration:**
-   - Enable users to place orders for home delivery from nearby pharmacies.
-
-5. **User Reviews and Ratings:**
+4. **User Reviews and Ratings:**
    - Allow users to leave reviews and ratings for shops, helping others make informed decisions.
 
-6. **Bug Fixes and Stability Improvements:**
+5. **Bug Fixes and Stability Improvements:**
    - Address issues in features that are not fully functional due to time constraints.
 
-7. **Enhanced Dashboard for Shop Owners:**
+6. **Enhanced Dashboard for Shop Owners:**
    - Provide shop owners with analytics, such as most searched medicines and daily traffic data.
 
-8. **Mobile App Development:**
+7. **Mobile App Development:**
    - Develop Android and iOS applications for better accessibility.
 
-9. **Scaling the System:**
+8. **Scaling the System:**
    - Optimize the backend to handle larger datasets and higher traffic as the platform scales.
 
 ---
