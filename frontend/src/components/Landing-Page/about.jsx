@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../Styles/About.css';
 import { MapPin } from 'lucide-react';
+import dash from "../../assets/dash.png";
 
 const About = () => {
   return (
@@ -18,7 +19,7 @@ const About = () => {
         <div className="about-card">
           <div className="about-image">
             <img
-              src={"/images/pharmacy-location.jpg"}
+              src={dash}
               alt="Finding medicines at nearby pharmacies"
               className="main-image"
             />

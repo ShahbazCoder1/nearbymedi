@@ -27,6 +27,13 @@
   padding: 0 2rem;
 }
 
+.main-image {
+  width: 100%; /* Adjust as needed */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Ensures the image fills the container */
+  object-position: left; /* Aligns the image to start from the left */
+}
+
 .section-header {
   text-align: center;
   margin-bottom: 3rem;

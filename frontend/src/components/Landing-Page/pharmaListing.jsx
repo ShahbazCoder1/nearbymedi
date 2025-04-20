@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import '../../Styles/pharmaListing.css';
 import { Users, ChevronRight, Activity, Users2, BarChart3 } from 'lucide-react';
+import dash from "../../assets/dash.png";
 
 const PharmacyListing = () => {
   useEffect(() => {
@@ -76,20 +77,13 @@ const PharmacyListing = () => {
           <div className="pharmacy-image-container reveal">
             <div className="image-border"></div>
             <img 
-              src="../../assets/pharmacy-dashboard.png" 
+              src={dash} 
               alt="Pharmacy dashboard" 
               className="pharmacy-visual"
             />
             <div className="pharmacy-badge">
-              <span className="badge-number">500+</span>
+              <span className="badge-number">1000+</span>
               <span className="badge-text">Pharmacies Registered</span>
-            </div>
-          </div>
-          
-          <div className="testimonial-container reveal">
-            <div className="testimonial">
-              <div className="quote">"Our pharmacy saw a 30% increase in new customers within just three months of joining the platform."</div>
-              <div className="author">— Sarah Chen, PharmaCare Plus</div>
             </div>
           </div>
         </div>
