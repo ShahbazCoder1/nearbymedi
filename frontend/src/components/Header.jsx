@@ -18,10 +18,11 @@ import {
 // You would replace this with your actual logo import
 import Logo from "../assets/logo1.png";
 
-const Header = ({ isDashboard }) => {
+const Header = ({ isDashboard, onLocationChange }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Set to true when user is logged in
+  const [userLocation, setUserLocation] = useState(null);
   const userDropdownRef = useRef(null);
   const navigate = useNavigate();
   
@@ -41,6 +42,15 @@ const Header = ({ isDashboard }) => {
   
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const toggleUserDropdown = () => setUserDropdownOpen((prev) => !prev);
+
+  // Handle location change from selector
+  const handleLocationChange = (location) => {
+    setUserLocation(location);
+    // Forward the location to parent component if callback exists
+    if (onLocationChange) {
+      onLocationChange(location);
+    }
+  };
 
   // Navigation handlers
   const handleSignIn = () => {
@@ -90,7 +100,7 @@ const Header = ({ isDashboard }) => {
           
           {isDashboard && (
             <div className="location-selector-container">
-              <LocationSelector />
+              <LocationSelector onLocationChange={handleLocationChange} />
             </div>
           )}
         </div>
@@ -98,7 +108,7 @@ const Header = ({ isDashboard }) => {
         {/* Center Section - Search Bar (only in dashboard) */}
         {isDashboard && (
           <div className="header-center">
-            <SearchInp isDashboard={true} />
+            <SearchInp isDashboard={true} userLocation={userLocation} />
           </div>
         )}
         
@@ -182,7 +192,7 @@ const Header = ({ isDashboard }) => {
       {/* Mobile Search Bar (only in dashboard) */}
       {isDashboard && (
         <div className="mobile-search-container">
-          <SearchInp isDashboard={true} />
+          <SearchInp isDashboard={true} userLocation={userLocation} />
         </div>
       )}
       

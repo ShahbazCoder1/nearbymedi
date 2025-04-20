@@ -974,3 +974,20 @@
     width: 100%;
   }
 }
+
+/* Add this to your existing CSS file */
+
+.generic-pharmacy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.generic-pharmacy-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #334155;
+}

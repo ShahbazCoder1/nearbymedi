@@ -1,7 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from utils import get_nearby_locations_with_ratings
 
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Configure Flask app for JSON
 app.config['JSON_AS_ASCII'] = False

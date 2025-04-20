@@ -10,10 +10,11 @@ import {
   Navigation
 } from 'lucide-react';
 
-const LocationSelector = () => {
+const LocationSelector = ({ onLocationChange }) => {
   const [location, setLocation] = useState({
     city: 'Loading...',
-    address: ''
+    address: '',
+    coordinates: null // Add coordinates to state
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [manualAddress, setManualAddress] = useState('');
@@ -55,6 +56,9 @@ const LocationSelector = () => {
           try {
             const { latitude, longitude } = position.coords;
             
+            // Store coordinates
+            const coordinates = { latitude, longitude };
+            
             const response = await fetch(
               `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${latitude},${longitude}&api_key=${API_KEY}`,
               {
@@ -79,10 +83,18 @@ const LocationSelector = () => {
               
               const cityName = districtComponent?.long_name || stateComponent?.long_name || 'Unknown location';
               
-              setLocation({
+              const newLocation = {
                 city: cityName,
-                address: result.formatted_address
-              });
+                address: result.formatted_address,
+                coordinates: coordinates
+              };
+              
+              setLocation(newLocation);
+              
+              // Notify parent components of the location change
+              if (onLocationChange) {
+                onLocationChange(newLocation);
+              }
             } else {
               throw new Error('Invalid response from Ola Maps API');
             }
@@ -90,7 +102,8 @@ const LocationSelector = () => {
             console.error('Error fetching location:', error);
             setLocation({
               city: 'Location unavailable',
-              address: ''
+              address: '',
+              coordinates: null
             });
           } finally {
             setIsLoading(false);
@@ -100,7 +113,8 @@ const LocationSelector = () => {
           console.error('Geolocation error:', error);
           setLocation({
             city: 'Location access denied',
-            address: ''
+            address: '',
+            coordinates: null
           });
           setIsLoading(false);
         }
@@ -108,7 +122,8 @@ const LocationSelector = () => {
     } else {
       setLocation({
         city: 'Geolocation not supported',
-        address: ''
+        address: '',
+        coordinates: null
       });
       setIsLoading(false);
     }
@@ -179,13 +194,22 @@ const LocationSelector = () => {
   const selectLocation = (result) => {
     const cityName = result.main_text || result.address?.city || result.display_name.split(',')[0];
     
-    setLocation({
+    // Create a new location object including coordinates if available
+    const newLocation = {
       city: cityName,
-      address: result.display_name
-    });
+      address: result.display_name,
+      coordinates: result.lat && result.lon ? { latitude: result.lat, longitude: result.lon } : null
+    };
+    
+    setLocation(newLocation);
     setManualAddress(result.display_name);
     setSearchResults([]);
     setIsDropdownOpen(false);
+    
+    // Notify parent components of the location change
+    if (onLocationChange) {
+      onLocationChange(newLocation);
+    }
   };
 
   const handleManualSubmit = () => {
@@ -193,7 +217,8 @@ const LocationSelector = () => {
       const cityPart = manualAddress.split(',')[0];
       setLocation({
         city: cityPart || manualAddress,
-        address: manualAddress
+        address: manualAddress,
+        coordinates: null
       });
       setIsDropdownOpen(false);
     }
@@ -220,7 +245,7 @@ const LocationSelector = () => {
           <MapPin size={18} color="#10a554" />
         </div>
         <div className="current-location">
-          <span className="location-label">Deliver to</span>
+          <span className="location-label">Your Location</span>
           <span className="location-value">{location.city}</span>
         </div>
         <div className={`dropdown-arrow ${isDropdownOpen ? 'dropdown-arrow-rotate' : ''}`}>
