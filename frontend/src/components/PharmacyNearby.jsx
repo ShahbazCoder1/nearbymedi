@@ -19,7 +19,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 
-const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation, onPharmaciesUpdate }) => {
+const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation }) => {
   const [sortOption, setSortOption] = useState('distance');
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('nearby');
@@ -47,7 +47,6 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation, on
         // If we have pharmacies data from state, use it
         if (statePharmacies.length > 0) {
           setPharmacies(statePharmacies);
-          if (onPharmaciesUpdate) onPharmaciesUpdate(statePharmacies);
         } else if (location.state?.coordinates) {
           // Otherwise fetch pharmacies from location state coordinates
           const { latitude, longitude } = location.state.coordinates;
@@ -62,17 +61,14 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation, on
             if (response.ok) {
               const pharmaciesData = await response.json();
               setPharmacies(pharmaciesData);
-              if (onPharmaciesUpdate) onPharmaciesUpdate(pharmaciesData);
             } else {
-              const fallbackData = getFallbackPharmacies(latitude, longitude);
-              setPharmacies(fallbackData);
-              if (onPharmaciesUpdate) onPharmaciesUpdate(fallbackData);
+              // If server doesn't support CORS, use fallback data
+              setPharmacies(getFallbackPharmacies(latitude, longitude));
             }
           } catch (fetchError) {
             console.error('Error fetching pharmacies:', fetchError);
-            const fallbackData = getFallbackPharmacies(latitude, longitude);
-            setPharmacies(fallbackData);
-            if (onPharmaciesUpdate) onPharmaciesUpdate(fallbackData);
+            // Use fallback data on error
+            setPharmacies(getFallbackPharmacies(latitude, longitude));
           }
         } else if (userLocation?.coordinates) {
           // Or use userLocation coordinates if available
@@ -88,23 +84,16 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation, on
             if (response.ok) {
               const pharmaciesData = await response.json();
               setPharmacies(pharmaciesData);
-              if (onPharmaciesUpdate) onPharmaciesUpdate(pharmaciesData);
             } else {
-              const fallbackData = getFallbackPharmacies(latitude, longitude);
-              setPharmacies(fallbackData);
-              if (onPharmaciesUpdate) onPharmaciesUpdate(fallbackData);
+              setPharmacies(getFallbackPharmacies(latitude, longitude));
             }
           } catch (fetchError) {
             console.error('Error fetching pharmacies:', fetchError);
-            const fallbackData = getFallbackPharmacies(latitude, longitude);
-            setPharmacies(fallbackData);
-            if (onPharmaciesUpdate) onPharmaciesUpdate(fallbackData);
+            setPharmacies(getFallbackPharmacies(latitude, longitude));
           }
         } else {
           // No coordinates, use fallback data centered on a default location
-          const fallbackData = getFallbackPharmacies(26.7282441, 88.4423456);
-          setPharmacies(fallbackData);
-          if (onPharmaciesUpdate) onPharmaciesUpdate(fallbackData);
+          setPharmacies(getFallbackPharmacies(26.7282441, 88.4423456));
         }
         
         // Fetch medicine details from Supabase if we have a search query
@@ -156,7 +145,7 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation, on
     };
     
     loadData();
-  }, [location.state, userLocation, onPharmaciesUpdate]);
+  }, [location.state, userLocation]);
 
   // Function to generate fallback pharmacy data (when API fails)
   const getFallbackPharmacies = (centerLat, centerLng) => {

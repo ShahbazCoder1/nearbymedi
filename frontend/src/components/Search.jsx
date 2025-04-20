@@ -78,7 +78,7 @@ const SearchInp = ({ isDashboard, userLocation }) => {
       // First try with the API
       try {
         const response = await fetch(
-          `https://wzrpmhhp-5000.inc1.devtunnels.ms/nearby-locations?lat=${latitude}&lon=${longitude}`, 
+          `https://nearbymedi.onrender.com/nearby-locations?lat=${latitude}&lon=${longitude}`, 
           {
             mode: 'cors', // Try with explicit CORS mode
             headers: {

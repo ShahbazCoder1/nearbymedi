@@ -243,8 +243,9 @@
 }
 
 /* Details Tab */
-.details-tab {
-  padding: 4px 4px 4px 0;
+.details-tab,
+.alternatives-tab {
+  padding: 16px 8px;
 }
 
 .medicine-details-section {
@@ -253,11 +254,12 @@
   gap: 20px;
 }
 
-.medicine-details-section h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--neutral-dark);
-  margin: 0 0 8px 0;
+.medicine-details-section h3,
+.alternatives-tab h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  color: #2E3B4E;
 }
 
 .medicine-description {
@@ -341,6 +343,95 @@
   line-height: 1.4;
 }
 
+/* Medicine Info Cards */
+.medicine-info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.info-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.info-card-icon {
+  margin-right: 12px;
+  color: #10a554;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #E8F5E9;
+  flex-shrink: 0;
+}
+
+.info-card-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.info-card-content p {
+  margin: 0;
+  font-weight: 500;
+  color: #2E3B4E;
+}
+
+/* Description Content */
+.medicine-description-content {
+  margin-bottom: 20px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.medicine-description-content h4 {
+  color: #2E3B4E;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.medicine-description-content p {
+  margin-bottom: 12px;
+}
+
+.medicine-description-content li {
+  margin-bottom: 8px;
+  list-style-position: inside;
+}
+
+/* Disclaimer */
+.medicine-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #10a554;
+  margin-top: 24px;
+}
+
+.medicine-disclaimer svg {
+  color: #10a554;
+  margin-right: 8px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.medicine-disclaimer p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
 /* Alternatives Tab */
 .alternatives-tab {
   padding: 4px 4px 4px 0;
@@ -367,63 +458,57 @@
 }
 
 .alternative-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
   border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 16px;
-  transition: all 0.2s ease;
-}
-
-.alternative-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-  border-color: rgba(16, 165, 84, 0.2);
 }
 
 .alternative-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .alternative-header h4 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--neutral-dark);
   margin: 0;
-}
-
-.alternative-generic {
-  font-size: 14px;
-  font-weight: 400;
-  color: #666;
-}
-
-.alternative-price {
-  font-size: 16px;
+  color: #2E3B4E;
   font-weight: 600;
-  color: var(--brand-green);
 }
 
-.alternative-details {
-  margin-bottom: 16px;
+.alternative-icon {
+  color: #10a554;
 }
 
-.alternative-form, .alternative-manufacturer {
-  font-size: 14px;
-  color: #555;
-  margin: 0 0 8px 0;
+.alternative-content {
+  padding: 16px;
 }
 
-.alternative-differentiation {
-  font-size: 14px;
-  color: var(--medical-blue);
-  font-weight: 500;
-  margin: 8px 0;
-  background-color: rgba(30, 136, 229, 0.08);
-  padding: 6px 10px;
-  border-radius: 4px;
-  display: inline-block;
+.alternative-description {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.alternative-description strong {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  color: #2E3B4E;
+}
+
+.alternative-description li {
+  margin-bottom: 4px;
+  list-style-position: inside;
+}
+
+.alternative-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  border-color: rgba(16, 165, 84, 0.2);
 }
 
 .alternative-action {
@@ -975,6 +1060,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .medicine-info-cards {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
 /* Add this to your existing CSS file */
 
 .generic-pharmacy-header {
@@ -990,4 +1081,42 @@
   margin: 0;
   font-size: 1.25rem;
   color: #334155;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #10a554;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 8px;
+}
+
+.error-container {
+  display: flex;
+  align-items: center;
+  background-color: #fee2e2;
+  color: #ef4444;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.error-icon {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

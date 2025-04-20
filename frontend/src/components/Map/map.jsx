@@ -11,7 +11,7 @@ import {
   LocateFixed
 } from 'lucide-react';
 
-const Map = ({ selectedPharmacyId, setMapInstance, onMarkerSelect, userLocation, pharmacies }) => {
+const Map = ({ selectedPharmacyId, setMapInstance, onMarkerSelect, userLocation }) => {
   const mapContainerRef = useRef(null);
   const [localMapInstance, setLocalMapInstance] = useState(null);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
@@ -49,96 +49,89 @@ const Map = ({ selectedPharmacyId, setMapInstance, onMarkerSelect, userLocation,
     setLocalMapInstance(myMap);
     if (setMapInstance) setMapInstance(myMap);
 
-    // Add user location marker
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userMarker = document.createElement('div');
-          userMarker.className = 'user-marker';
-          userMarker.innerHTML = '<div class="user-dot"></div><div class="user-pulse"></div>';
-          
-          // Using correct method to add marker
-          olaMaps
-            .addMarker({
-              element: userMarker,
-              anchor: 'center'
+    // Add pharmacy markers when map is loaded
+    myMap.on('load', () => {
+      // Try to get pharmacy data from location state
+      const pharmacies = location.state?.nearbyPharmacies || [];
+      const coordinates = location.state?.coordinates || userLocation?.coordinates;
+      
+      const markersObj = {};
+      
+      if (pharmacies.length > 0) {
+        // Add markers from state data
+        pharmacies.forEach((pharmacy) => {
+          if (pharmacy.latitude && pharmacy.longitude) {
+            // Create marker element
+            const markerEl = createMarkerElement(pharmacy);
+            addMarkerEvents(markerEl, pharmacy);
+            
+            // Add marker to map
+            const marker = new olaMaps.Marker({
+              element: markerEl,
+              anchor: 'bottom'
+            })
+            .setLngLat([pharmacy.longitude, pharmacy.latitude])
+            .addTo(myMap);
+            
+            markersObj[pharmacy.id] = {
+              marker,
+              element: markerEl,
+              pharmacy
+            };
+          }
+        });
+        
+        setMarkers(markersObj);
+        
+        // Center map on first pharmacy
+        if (pharmacies[0]?.latitude && pharmacies[0]?.longitude) {
+          myMap.flyTo({
+            center: [pharmacies[0].longitude, pharmacies[0].latitude],
+            zoom: 15,
+            speed: 1.5
+          });
+        }
+      } else {
+        // No pharmacies from state, add default markers around the center
+        addDefaultMarkers(olaMaps, myMap, markersObj, centerCoordinates);
+      }
+
+      // Add user location marker
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userMarker = document.createElement('div');
+            userMarker.className = 'user-marker';
+            userMarker.innerHTML = '<div class="user-dot"></div><div class="user-pulse"></div>';
+            
+            new olaMaps.Marker({
+              element: userMarker
             })
             .setLngLat([position.coords.longitude, position.coords.latitude])
             .addTo(myMap);
-          
-          // Only center map on user's location if no other location is selected
-          if (!userLocation?.coordinates && !location.state?.coordinates) {
-            myMap.flyTo({
-              center: [position.coords.longitude, position.coords.latitude],
-              zoom: 15,
-              speed: 1.5
-            });
+            
+            // Only center map on user's location if no other location is selected
+            if (!userLocation?.coordinates && !location.state?.coordinates) {
+              myMap.flyTo({
+                center: [position.coords.longitude, position.coords.latitude],
+                zoom: 15,
+                speed: 1.5
+              });
+            }
+          },
+          (error) => {
+            console.error('Error getting user location:', error);
           }
-        },
-        (error) => {
-          console.error('Error getting user location:', error);
-        }
-      );
-    }
+        );
+      }
+    });
 
     return () => {
       if (myMap) {
         myMap.remove();
       }
     };
-  }, []); 
-
-  // Update markers when pharmacies data changes
-  useEffect(() => {
-    if (!localMapInstance || !pharmacies || pharmacies.length === 0) return;
-
-    // Clear existing markers
-    Object.values(markers).forEach(({ marker }) => {
-      if (marker) marker.remove();
-    });
-
-    const newMarkers = {};
-
-    // Add markers for each pharmacy
-    pharmacies.forEach((pharmacy) => {
-      if (pharmacy.latitude && pharmacy.longitude) {
-        // Create marker element
-        const markerEl = createMarkerElement(pharmacy);
-        
-        try {
-          // Add marker to map using correct method
-          const marker = localMapInstance.addMarker({
-            element: markerEl,
-            anchor: 'bottom'
-          })
-          .setLngLat([pharmacy.longitude, pharmacy.latitude])
-          .addTo(localMapInstance);
-          
-          // Add event handlers to marker element
-          addMarkerEvents(markerEl, pharmacy);
-          
-          newMarkers[pharmacy.id] = {
-            marker,
-            element: markerEl,
-            pharmacy
-          };
-        } catch (error) {
-          console.error("Error adding marker:", error);
-        }
-      }
-    });
-    
-    setMarkers(newMarkers);
-    
-    // Center map on first pharmacy if available
-    if (pharmacies[0]?.latitude && pharmacies[0]?.longitude) {
-      localMapInstance.flyTo({
-        center: [pharmacies[0].longitude, pharmacies[0].latitude],
-        zoom: 15,
-        speed: 1.5
-      });
-    }
-  }, [pharmacies, localMapInstance]);
+  }, [location.state, userLocation]); 
 
   // When userLocation changes, update the map center
   useEffect(() => {
@@ -151,32 +144,49 @@ const Map = ({ selectedPharmacyId, setMapInstance, onMarkerSelect, userLocation,
       });
     }
   }, [userLocation, localMapInstance]);
-
-  // Update marker styles when selected pharmacy changes
-  useEffect(() => {
-    if (markers && Object.keys(markers).length > 0) {
-      // Reset all markers to default style
-      Object.values(markers).forEach(({ element }) => {
-        if (element) element.classList.remove('selected-marker');
-      });
-      
-      // Apply selected style to the selected pharmacy marker
-      if (selectedPharmacyId && markers[selectedPharmacyId]) {
-        const { element, pharmacy } = markers[selectedPharmacyId];
-        if (element) element.classList.add('selected-marker');
-        
-        // Center map on selected pharmacy
-        if (localMapInstance && pharmacy) {
-          localMapInstance.flyTo({
-            center: [pharmacy.longitude, pharmacy.latitude],
-            zoom: 16,
-            speed: 1.5
-          });
-        }
-      }
-    }
-  }, [selectedPharmacyId, markers, localMapInstance]);
   
+  // Function to add default markers when no pharmacy data is available
+  const addDefaultMarkers = (olaMaps, map, markersObj, centerCoords) => {
+    // Default pharmacies for fallback - position them around the provided center coordinates
+    const [centerLng, centerLat] = centerCoords;
+    
+    // Generate pharmacies around the center point
+    for (let i = 0; i < 5; i++) {
+      // Generate random offsets (within ~1km)
+      const latOffset = (Math.random() - 0.5) * 0.01;
+      const lngOffset = (Math.random() - 0.5) * 0.01;
+      
+      const pharmacy = {
+        id: i + 1,
+        name: ["HealthPlus Pharmacy", "City Medical Store", "MediCare Pharmacy", 
+               "Wellness Drugstore", "Family Pharmacy"][i],
+        coords: [centerLng + lngOffset, centerLat + latOffset],
+        isOpen: Math.random() > 0.2,
+        address: `${Math.floor(Math.random() * 500)} Main Street, ${userLocation?.city || 'Downtown'}`,
+        medicineInStock: Math.random() > 0.3
+      };
+      
+      // Create and add marker
+      const markerEl = createMarkerElement(pharmacy);
+      addMarkerEvents(markerEl, pharmacy);
+      
+      const marker = new olaMaps.Marker({
+        element: markerEl,
+        anchor: 'bottom'
+      })
+      .setLngLat(pharmacy.coords)
+      .addTo(map);
+      
+      markersObj[pharmacy.id] = {
+        marker,
+        element: markerEl,
+        pharmacy
+      };
+    }
+    
+    setMarkers(markersObj);
+  };
+
   // Helper function to add event listeners to markers
   const addMarkerEvents = (markerEl, pharmacy) => {
     // Add tooltip hover behavior
@@ -196,33 +206,33 @@ const Map = ({ selectedPharmacyId, setMapInstance, onMarkerSelect, userLocation,
     });
   };
 
-  // Create a custom marker element
-  const createMarkerElement = (pharmacy) => {
-    const markerEl = document.createElement('div');
-    const hasMedicine = pharmacy.medicineInStock !== undefined 
-      ? pharmacy.medicineInStock 
-      : true;
-    markerEl.className = `custom-marker ${hasMedicine ? 'in-stock' : 'no-stock'}`;
-    
-    // Add icon HTML - we'll now use an SVG path similar to Lucide's Pill icon
-    markerEl.innerHTML = `
-      <div class="marker-icon ${pharmacy.isOpen ? 'open' : 'closed'}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
-          <path d="m8.5 8.5 7 7"></path>
-        </svg>
-      </div>
-      <div class="marker-tooltip">
-        <div class="tooltip-name">${pharmacy.name}</div>
-        <div class="tooltip-status ${pharmacy.isOpen ? 'open' : 'closed'}">
-          ${pharmacy.isOpen ? 'Open Now' : 'Closed'}
-        </div>
-        <div class="tooltip-distance">${pharmacy.distance || 'Unknown distance'}</div>
-      </div>
-    `;
-    
-    return markerEl;
-  };
+  // Update marker styles when selected pharmacy changes
+  useEffect(() => {
+    if (markers && Object.keys(markers).length > 0) {
+      // Reset all markers to default style
+      Object.values(markers).forEach(({ element }) => {
+        element.classList.remove('selected-marker');
+      });
+      
+      // Apply selected style to the selected pharmacy marker
+      if (selectedPharmacyId && markers[selectedPharmacyId]) {
+        const { element, pharmacy } = markers[selectedPharmacyId];
+        element.classList.add('selected-marker');
+        
+        // Center map on selected pharmacy
+        if (localMapInstance) {
+          const coords = pharmacy.coords || [pharmacy.longitude, pharmacy.latitude];
+          if (coords) {
+            localMapInstance.flyTo({
+              center: coords,
+              zoom: 16,
+              speed: 1.5
+            });
+          }
+        }
+      }
+    }
+  }, [selectedPharmacyId, markers, localMapInstance]);
 
   // Function to handle zooming
   const handleZoomIn = () => {
@@ -255,6 +265,37 @@ const Map = ({ selectedPharmacyId, setMapInstance, onMarkerSelect, userLocation,
     setShowInfoPanel(false);
   };
 
+  // Create a custom marker element
+  const createMarkerElement = (pharmacy) => {
+    const markerEl = document.createElement('div');
+    const hasMedicine = pharmacy.medicineInStock !== undefined 
+      ? pharmacy.medicineInStock 
+      : true;
+    markerEl.className = `custom-marker ${hasMedicine ? 'in-stock' : 'no-stock'}`;
+    
+    // Add icon HTML - we'll now use an SVG path similar to Lucide's Pill icon
+    markerEl.innerHTML = `
+      <div class="marker-icon ${pharmacy.isOpen ? 'open' : 'closed'}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+          <path d="m8.5 8.5 7 7"></path>
+        </svg>
+      </div>
+      <div class="marker-tooltip">
+        <div class="tooltip-name">${pharmacy.name}</div>
+        <div class="tooltip-status ${pharmacy.isOpen ? 'open' : 'closed'}">
+          ${pharmacy.isOpen ? 'Open Now' : 'Closed'}
+        </div>
+        ${hasMedicine !== undefined ? `
+        <div class="tooltip-medicine-status">
+          ${hasMedicine ? 'Medicine in Stock' : 'Medicine not available'}
+        </div>` : ''}
+      </div>
+    `;
+    
+    return markerEl;
+  };
+
   return (
     <div className="map-container">
       <div className="map-controls">
@@ -267,30 +308,7 @@ const Map = ({ selectedPharmacyId, setMapInstance, onMarkerSelect, userLocation,
         <button className="map-control-btn my-location" onClick={handleMyLocation} aria-label="My location">
           <LocateFixed size={16} />
         </button>
-        <button className="map-control-btn reset-view" 
-          onClick={() => {
-            if (localMapInstance && pharmacies && pharmacies.length > 0) {
-              // Try to fit all pharmacies in the view
-              const bounds = new window.olaMaps.LngLatBounds();
-              
-              // Add all pharmacy locations to bounds
-              pharmacies.forEach(pharmacy => {
-                if (pharmacy.latitude && pharmacy.longitude) {
-                  bounds.extend([pharmacy.longitude, pharmacy.latitude]);
-                }
-              });
-              
-              // Check if bounds have been extended
-              if (!bounds.isEmpty()) {
-                localMapInstance.fitBounds(bounds, {
-                  padding: 50,
-                  maxZoom: 16
-                });
-              }
-            }
-          }} 
-          aria-label="Show all pharmacies"
-        >
+        <button className="map-control-btn reset-view" onClick={() => localMapInstance && localMapInstance.flyTo({center: [77.61648476788898, 12.931423492103944], zoom: 15})} aria-label="Reset map">
           <MapPin size={16} />
         </button>
       </div>
