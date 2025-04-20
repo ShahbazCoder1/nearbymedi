@@ -109,7 +109,6 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation }) 
           } else if (data && data.length > 0) {
             const medicine = data[0];
             
-            // Format medicine info from database columns
             setMedicineInfo({
               name: medicine.name || searchQuery,
               genericName: medicine.short_composition1 || 'N/A',
@@ -121,7 +120,6 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation }) 
               isDiscontinued: medicine['Is_discontinued'] || false
             });
           } else {
-            // Set default info if medicine not found
             setMedicineInfo({
               name: searchQuery,
               genericName: 'N/A',
@@ -158,11 +156,9 @@ const PharmacyNearby = ({ onPharmacySelect, selectedPharmacyId, userLocation }) 
     ];
     
     for (let i = 0; i < 5; i++) {
-      // Generate random offsets for lat/lng (within about 2km)
       const latOffset = (Math.random() - 0.5) * 0.02;
       const lngOffset = (Math.random() - 0.5) * 0.02;
       
-      // Calculate distance in km (approximate)
       const distance = Math.sqrt(latOffset * latOffset + lngOffset * lngOffset) * 111.32;
       
       pharmacies.push({
