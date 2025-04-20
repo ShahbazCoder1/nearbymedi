@@ -47,6 +47,7 @@ def fetch_ratings_reviews():
         print(f"Error fetching ratings and reviews: {e}")
         return {}
 
+'''
 def get_nearby_locations_with_ratings(lat, lon, radius_km=5):
     locations = fetch_locations_in_bounding_box(lat, lon, radius_km)
     ratings_reviews = fetch_ratings_reviews()
@@ -66,6 +67,38 @@ def get_nearby_locations_with_ratings(lat, lon, radius_km=5):
                     "isOpen": True,
                     "distance": format_distance(dist),
                     "address": location.get("address", "Not Available"),
+                    "rating": random_review["rating"],
+                    "reviews": random_review["reviews"],
+                    "selected": False
+                })
+        except Exception as e:
+            print(f"Error processing location {location.get('id')}: {e}")
+            continue
+    return nearby
+'''
+
+
+def get_nearby_locations_with_ratings(lat, lon, radius_km=5):
+    locations = fetch_locations_in_bounding_box(lat, lon, radius_km)
+    ratings_reviews = fetch_ratings_reviews()
+    nearby = []
+    for location in locations:
+        try:
+            lat2 = float(location.get("latitude"))
+            lon2 = float(location.get("longitude"))
+            dist = haversine(lat, lon, lat2, lon2)
+            if dist <= radius_km:
+                location_id = location.get("id")
+                reviews_for_location = ratings_reviews.get(location_id, [{"rating": 0, "reviews": "No reviews"}])
+                random_review = random.choice(reviews_for_location)
+                nearby.append({
+                    "id": location_id,
+                    "name": location.get("name", "Unnamed"),
+                    "isOpen": True,
+                    "distance": format_distance(dist),
+                    "address": location.get("address", "Not Available"),
+                    "latitude": lat2,
+                    "longitude": lon2,
                     "rating": random_review["rating"],
                     "reviews": random_review["reviews"],
                     "selected": False
