@@ -93,7 +93,7 @@ We explored three dashboard designs and finalized the third one for its simplici
 ## Implementation Details
 1. **Backend Data:**
    - We used Kaggle's free dataset: [AZ Medicine Dataset of India](https://www.kaggle.com/datasets/shudhanshusingh/az-medicine-dataset-of-india) to gather information on all available medications in India.
-   - For shop coordinates, we sourced data from Wikipedia and OpenStreetMap.
+   - For shop coordinates, we sourced data from Wikipedia, OpenStreetMap and OlaMaps API.
    - Integrated a new external API to fetch detailed descriptions of medicines.
 2. **Database Limitations:**
    - Due to time constraints, the database currently only covers shops and pharmacies in **West Bengal**.
