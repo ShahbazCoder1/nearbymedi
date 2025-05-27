@@ -4,11 +4,8 @@ import os
 import math
 import random
 
-#url = os.getenv("SUPABASE_URL")
-#key = os.getenv("SUPABASE_KEY")
-
-url = "https://pxbsnlbwtkkxcqlocplu.supabase.co"
-key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4YnNubGJ3dGtreGNxbG9jcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3MjE1OTQsImV4cCI6MjA2MDI5NzU5NH0.QKHjUdlG58U1yLpgXIDqh30qoo0Au-dbcvKYjnEguvI"
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
 
 if not url or not key:
     raise EnvironmentError("SUPABASE_URL and SUPABASE_KEY must be set.")
